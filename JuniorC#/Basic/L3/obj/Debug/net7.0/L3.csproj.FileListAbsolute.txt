@@ -1,0 +1,15 @@
+D:\Unity\UnityLearning\JuniorC#\Basic\L3\bin\Debug\net7.0\L3.exe
+D:\Unity\UnityLearning\JuniorC#\Basic\L3\bin\Debug\net7.0\L3.deps.json
+D:\Unity\UnityLearning\JuniorC#\Basic\L3\bin\Debug\net7.0\L3.runtimeconfig.json
+D:\Unity\UnityLearning\JuniorC#\Basic\L3\bin\Debug\net7.0\L3.dll
+D:\Unity\UnityLearning\JuniorC#\Basic\L3\bin\Debug\net7.0\L3.pdb
+D:\Unity\UnityLearning\JuniorC#\Basic\L3\obj\Debug\net7.0\L3.csproj.AssemblyReference.cache
+D:\Unity\UnityLearning\JuniorC#\Basic\L3\obj\Debug\net7.0\L3.GeneratedMSBuildEditorConfig.editorconfig
+D:\Unity\UnityLearning\JuniorC#\Basic\L3\obj\Debug\net7.0\L3.AssemblyInfoInputs.cache
+D:\Unity\UnityLearning\JuniorC#\Basic\L3\obj\Debug\net7.0\L3.AssemblyInfo.cs
+D:\Unity\UnityLearning\JuniorC#\Basic\L3\obj\Debug\net7.0\L3.csproj.CoreCompileInputs.cache
+D:\Unity\UnityLearning\JuniorC#\Basic\L3\obj\Debug\net7.0\L3.dll
+D:\Unity\UnityLearning\JuniorC#\Basic\L3\obj\Debug\net7.0\refint\L3.dll
+D:\Unity\UnityLearning\JuniorC#\Basic\L3\obj\Debug\net7.0\L3.pdb
+D:\Unity\UnityLearning\JuniorC#\Basic\L3\obj\Debug\net7.0\L3.genruntimeconfig.cache
+D:\Unity\UnityLearning\JuniorC#\Basic\L3\obj\Debug\net7.0\ref\L3.dll
