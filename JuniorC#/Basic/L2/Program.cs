@@ -13,7 +13,7 @@ class Program
     string workPlace = Console.ReadLine();
     Console.WriteLine("\nКакой твой знак зодиака?: ");
     string zodiacSign = Console.ReadLine();
-    Console.WriteLine($"\n\nТебя зовут {name}, тебе {age} лет, твой знак - {zodiac} и ты работаешь в/на {workPlace}!");
+    Console.WriteLine($"\n\nТебя зовут {name}, тебе {age} лет, твой знак - {zodiacSign} и ты работаешь в/на {workPlace}!");
 
     Console.ReadKey();
   }
