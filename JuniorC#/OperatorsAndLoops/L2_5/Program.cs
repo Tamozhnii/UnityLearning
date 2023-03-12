@@ -6,6 +6,7 @@ float exchangeRate10RUBToCNH = 0.9f;
 float balanceInRUB = 1000f;
 float balanceInBYN = 100f;
 float balanceInCNH = 0;
+int per10RUB = 10;
 
 
 while (isOpen)
@@ -38,7 +39,7 @@ while (isOpen)
       if (numberRUB <= balanceInRUB)
       {
         balanceInRUB -= numberRUB;
-        balanceInBYN += numberRUB / 10 * exchangeRate10RUBToBYN;
+        balanceInBYN += numberRUB / per10RUB * exchangeRate10RUBToBYN;
         Console.WriteLine($"\nВаш баланс составляет: RUB - {balanceInRUB}, BYN - {balanceInBYN}, CNH - {balanceInCNH}");
       }
       else
@@ -66,7 +67,7 @@ while (isOpen)
       if (numberRUB <= balanceInRUB)
       {
         balanceInRUB -= numberRUB;
-        balanceInCNH += numberRUB / 10 * exchangeRate10RUBToCNH;
+        balanceInCNH += numberRUB / per10RUB * exchangeRate10RUBToCNH;
         Console.WriteLine($"\nВаш баланс составляет: RUB - {balanceInRUB}, BYN - {balanceInBYN}, CNH - {balanceInCNH}");
       }
       else
