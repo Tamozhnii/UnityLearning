@@ -24,9 +24,9 @@ while (isOpen)
   Console.WriteLine("6. Завершить работу");
   Console.Write("\nВведите команду: ");
   int userCommand = Convert.ToInt32(Console.ReadLine());
-  int numberRUB;
-  int numberBYN;
-  int numberCNH;
+  float numberRUB;
+  float numberBYN;
+  float numberCNH;
 
   switch (userCommand)
   {
