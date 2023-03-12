@@ -1,6 +1,7 @@
-﻿string userCommand = "";
+﻿string exitCommand = "exit";
+string userCommand = "";
 
-Console.WriteLine("Добро пожаловать в VIM");
+Console.WriteLine("Добро пожаловать в VIM\n");
 
 while (userCommand.ToLower() != "exit")
 {
