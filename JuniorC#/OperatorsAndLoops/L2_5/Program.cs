@@ -23,17 +23,17 @@ while (isOpen)
   Console.WriteLine("5. Продать CNH");
   Console.WriteLine("6. Завершить работу");
   Console.Write("\nВведите команду: ");
-  int userCommand = Convert.ToInt32(Console.ReadLine());
+  string userCommand = Console.ReadLine();
   float numberRUB;
   float numberBYN;
   float numberCNH;
 
   switch (userCommand)
   {
-    case 1:
+    case "1":
       Console.WriteLine($"\nВаш баланс составляет: RUB - {balanceInRUB}, BYN - {balanceInBYN}, CNH - {balanceInCNH}");
       break;
-    case 2:
+    case "2":
       Console.WriteLine("\nСколько вы желаете поменять: ");
       numberRUB = Convert.ToInt32(Console.ReadLine());
       if (numberRUB <= balanceInRUB)
@@ -47,7 +47,7 @@ while (isOpen)
         Console.WriteLine("\nНедостаточно стредств");
       }
       break;
-    case 3:
+    case "3":
       Console.WriteLine("\nСколько вы желаете продать: ");
       numberBYN = Convert.ToInt32(Console.ReadLine());
       if (numberBYN <= balanceInBYN)
@@ -61,7 +61,7 @@ while (isOpen)
         Console.WriteLine("\nНедостаточно стредств");
       }
       break;
-    case 4:
+    case "4":
       Console.WriteLine("\nСколько вы желаете поменять: ");
       numberRUB = Convert.ToInt32(Console.ReadLine());
       if (numberRUB <= balanceInRUB)
@@ -75,7 +75,7 @@ while (isOpen)
         Console.WriteLine("\nНедостаточно стредств");
       }
       break;
-    case 5:
+    case "5":
       Console.WriteLine("\nСколько вы желаете продать: ");
       numberCNH = Convert.ToInt32(Console.ReadLine());
       if (numberCNH <= balanceInCNH)
@@ -89,7 +89,7 @@ while (isOpen)
         Console.WriteLine("\nНедостаточно стредств");
       }
       break;
-    case 6:
+    case "6":
       isOpen = false;
       Console.WriteLine("\nПриходите снова");
       break;
