@@ -1,20 +1,25 @@
-﻿bool isOpen = true;
-float exchangeRateBYNToRUB = 30f;
-float exchangeRate10RUBToBYN = 0.25f;
-float exchangeRateCNHToRUB = 9f;
-float exchangeRate10RUBToCNH = 0.9f;
+﻿const string CommandViewBalance = "1";
+const string CommandConvertRUBToBYN = "2";
+const string CommandConvertBYNToRUB = "3";
+const string CommandConvertRUBToCNH = "4";
+const string CommandConvertCNHToRUB = "5";
+const string CommandExit = "6";
+const float ExchangeRateBYNToRUB = 30f;
+const float ExchangeRateRUBToBYN = 0.025f;
+const float ExchangeRateCNHToRUB = 9f;
+const float ExchangeRateRUBToCNH = 0.09f;
+bool isOpen = true;
 float balanceInRUB = 1000f;
 float balanceInBYN = 100f;
 float balanceInCNH = 0;
-int per10RUB = 10;
-
 
 while (isOpen)
 {
+  float userInputNumber = 0;
   Console.WriteLine("Вас приветствует обменный пункт!\n");
   Console.WriteLine("Курс валют: (Покупка / Продажа)");
-  Console.WriteLine($"RUB/BYN - {exchangeRate10RUBToBYN}(за 10 руб.) / {exchangeRateBYNToRUB}");
-  Console.WriteLine($"RUB/CNH - {exchangeRate10RUBToCNH}(за 10 руб.) / {exchangeRateCNHToRUB}");
+  Console.WriteLine($"RUB/BYN - {ExchangeRateRUBToBYN} / {ExchangeRateBYNToRUB}");
+  Console.WriteLine($"RUB/CNH - {ExchangeRateRUBToCNH} / {ExchangeRateCNHToRUB}");
   Console.WriteLine("\n\nВозможные операции:");
   Console.WriteLine("1. Посмотреть текущий баланс");
   Console.WriteLine("2. Купить BYN");
@@ -24,72 +29,77 @@ while (isOpen)
   Console.WriteLine("6. Завершить работу");
   Console.Write("\nВведите команду: ");
   string userCommand = Console.ReadLine();
-  float numberRUB;
-  float numberBYN;
-  float numberCNH;
 
   switch (userCommand)
   {
-    case "1":
+    case CommandViewBalance:
       Console.WriteLine($"\nВаш баланс составляет: RUB - {balanceInRUB}, BYN - {balanceInBYN}, CNH - {balanceInCNH}");
       break;
-    case "2":
+    case CommandConvertRUBToBYN:
       Console.WriteLine("\nСколько вы желаете поменять: ");
-      numberRUB = Convert.ToInt32(Console.ReadLine());
-      if (numberRUB <= balanceInRUB)
+      userInputNumber = Convert.ToInt32(Console.ReadLine());
+
+      if (userInputNumber <= balanceInRUB)
       {
-        balanceInRUB -= numberRUB;
-        balanceInBYN += numberRUB / per10RUB * exchangeRate10RUBToBYN;
+        balanceInRUB -= userInputNumber;
+        balanceInBYN += userInputNumber * ExchangeRateRUBToBYN;
         Console.WriteLine($"\nВаш баланс составляет: RUB - {balanceInRUB}, BYN - {balanceInBYN}, CNH - {balanceInCNH}");
       }
       else
       {
         Console.WriteLine("\nНедостаточно стредств");
       }
+
       break;
-    case "3":
+    case CommandConvertBYNToRUB:
       Console.WriteLine("\nСколько вы желаете продать: ");
-      numberBYN = Convert.ToInt32(Console.ReadLine());
-      if (numberBYN <= balanceInBYN)
+      userInputNumber = Convert.ToInt32(Console.ReadLine());
+
+      if (userInputNumber <= balanceInBYN)
       {
-        balanceInBYN -= numberBYN;
-        balanceInRUB += numberBYN * exchangeRateBYNToRUB;
+        balanceInBYN -= userInputNumber;
+        balanceInRUB += userInputNumber * ExchangeRateBYNToRUB;
         Console.WriteLine($"\nВаш баланс составляет: RUB - {balanceInRUB}, BYN - {balanceInBYN}, CNH - {balanceInCNH}");
       }
       else
       {
         Console.WriteLine("\nНедостаточно стредств");
       }
+
       break;
-    case "4":
+    case CommandConvertRUBToCNH:
       Console.WriteLine("\nСколько вы желаете поменять: ");
-      numberRUB = Convert.ToInt32(Console.ReadLine());
-      if (numberRUB <= balanceInRUB)
+      userInputNumber = Convert.ToInt32(Console.ReadLine());
+
+      if (userInputNumber <= balanceInRUB)
       {
-        balanceInRUB -= numberRUB;
-        balanceInCNH += numberRUB / per10RUB * exchangeRate10RUBToCNH;
+        balanceInRUB -= userInputNumber;
+        balanceInCNH += userInputNumber * ExchangeRateRUBToCNH;
         Console.WriteLine($"\nВаш баланс составляет: RUB - {balanceInRUB}, BYN - {balanceInBYN}, CNH - {balanceInCNH}");
       }
       else
       {
         Console.WriteLine("\nНедостаточно стредств");
       }
+
       break;
-    case "5":
+    case CommandConvertCNHToRUB:
       Console.WriteLine("\nСколько вы желаете продать: ");
-      numberCNH = Convert.ToInt32(Console.ReadLine());
-      if (numberCNH <= balanceInCNH)
+      userInputNumber = Convert.ToInt32(Console.ReadLine());
+
+      if (userInputNumber <= balanceInCNH)
       {
-        balanceInCNH -= numberCNH;
-        balanceInRUB += numberCNH * exchangeRateCNHToRUB;
+        balanceInCNH -= userInputNumber;
+        balanceInRUB += userInputNumber * ExchangeRateCNHToRUB;
         Console.WriteLine($"\nВаш баланс составляет: RUB - {balanceInRUB}, BYN - {balanceInBYN}, CNH - {balanceInCNH}");
       }
       else
       {
         Console.WriteLine("\nНедостаточно стредств");
       }
+
       break;
-    case "6":
+    case CommandExit:
       isOpen = false;
       Console.WriteLine("\nПриходите снова");
       break;
