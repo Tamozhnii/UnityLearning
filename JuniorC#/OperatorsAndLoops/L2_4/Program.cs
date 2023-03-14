@@ -1,7 +1,7 @@
-﻿const int multipleThree = 3;
-const int multipleFive = 5;
-const int minValue = 0;
-const int maxValue = 100;
+﻿int firstDivider = 3;
+int secondDivider = 5;
+int minValue = 0;
+int maxValue = 100;
 Random random = new Random();
 int randomValue = random.Next(minValue, maxValue);
 int sum = 0;
