@@ -5,6 +5,7 @@ const string CommandSetAge = "SetAge";
 const string CommandPublishProfile = "Publish";
 const string CommandDeleteProfile = "Delete";
 const string CommandExit = "Exit";
+
 bool isProgramWork = true;
 string userName = null;
 string userSurname = null;
@@ -27,7 +28,6 @@ while (isProgramWork)
   switch (userCommand)
   {
     case CommandViewProfile:
-
       if (userName != null && userSurname != null && userAge != 0)
       {
         Console.WriteLine($"\nИмя - {userName}, фамилия - {userSurname}, возраст - {userAge}");
@@ -40,23 +40,26 @@ while (isProgramWork)
       Console.ReadKey();
       Console.Clear();
       break;
+
     case CommandSetName:
       Console.Write("\nВведите свое имя: ");
       userName = Console.ReadLine();
       Console.Clear();
       break;
+
     case CommandSetSurname:
       Console.Write("\nВведите свою фамилию: ");
       userSurname = Console.ReadLine();
       Console.Clear();
       break;
+
     case CommandSetAge:
       Console.Write("\nВведите свой возраст: ");
       userAge = Convert.ToInt32(Console.ReadLine());
       Console.Clear();
       break;
-    case CommandPublishProfile:
 
+    case CommandPublishProfile:
       if (userName != null && userSurname != null && userAge != 0)
       {
         Console.Write("\nВаш профиль был успешно опубликован!");
@@ -69,6 +72,7 @@ while (isProgramWork)
       Console.ReadKey();
       Console.Clear();
       break;
+
     case CommandDeleteProfile:
       userName = null;
       userSurname = null;
@@ -77,9 +81,11 @@ while (isProgramWork)
       Console.ReadKey();
       Console.Clear();
       break;
+
     case CommandExit:
       isProgramWork = false;
       break;
+
     default:
       Console.Write("\nНеизвестная команда, попробуйте снова");
       Console.ReadKey();
