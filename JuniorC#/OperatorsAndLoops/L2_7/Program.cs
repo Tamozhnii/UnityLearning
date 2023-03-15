@@ -4,11 +4,14 @@ Console.Write("Укажите желаемый символ: ");
 char symbol = Convert.ToChar(Console.Read());
 string pictureFrame = "";
 
-for (int i = 0; i <= userName.Length + 1; i++)
+for (int i = 0; i < userName.Length; i++)
 {
   pictureFrame += symbol;
 }
 
-string picture = $"\n{pictureFrame}\n{symbol}{userName}{symbol}\n{pictureFrame}";
+string middleLine = $"{symbol}{userName}{symbol}";
+string EdgeLine = $"{symbol}{pictureFrame}{symbol}";
 
-Console.WriteLine(picture);
+Console.WriteLine($"\n{EdgeLine}");
+Console.WriteLine(middleLine);
+Console.WriteLine(EdgeLine);
