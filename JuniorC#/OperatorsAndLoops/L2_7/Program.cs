@@ -1,15 +1,14 @@
 ﻿Console.Write("Введите имя: ");
 string userName = Console.ReadLine();
 Console.Write("Укажите желаемый символ: ");
-char symbol = Convert.ToChar(Console.ReadLine());
-int pictureFrameLenght = userName.Length + 2;
+char symbol = Convert.ToChar(Console.Read());
 string pictureFrame = "";
 
-for (int i = 0; i < pictureFrameLenght; i++)
+for (int i = 0; i <= userName.Length + 1; i++)
 {
   pictureFrame += symbol;
 }
 
-Console.WriteLine($"\n{pictureFrame}");
-Console.WriteLine($"{symbol}{userName}{symbol}");
-Console.WriteLine($"{pictureFrame}");
+string picture = $"\n{pictureFrame}\n{symbol}{userName}{symbol}\n{pictureFrame}";
+
+Console.WriteLine(picture);
