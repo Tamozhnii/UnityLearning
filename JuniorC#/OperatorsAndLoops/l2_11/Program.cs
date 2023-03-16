@@ -1,15 +1,18 @@
-﻿Console.Write("Введите строку для проверки: ");
+﻿char leftBracket = '(';
+char rightBracket = ')';
+Console.Write("Введите строку для проверки: ");
 string userValue = Console.ReadLine();
+int normalState = 0;
 int deep = 0;
 int counter = 0;
 
 foreach (var symbol in userValue)
 {
-  if (symbol == '(')
+  if (symbol == leftBracket)
   {
     counter++;
   }
-  else if (symbol == ')')
+  else if (symbol == rightBracket)
   {
     counter--;
   }
@@ -19,13 +22,13 @@ foreach (var symbol in userValue)
     deep = counter;
   }
 
-  if (counter < 0)
+  if (counter < normalState)
   {
     break;
   }
 }
 
-if (counter == 0)
+if (counter == normalState)
 {
   Console.WriteLine($"Строка корректная, глубина равняется {deep}");
 }
