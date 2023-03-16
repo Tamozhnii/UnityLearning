@@ -13,7 +13,6 @@ for (int i = 1; i <= attempts; i++)
     break;
   }
 
-
   if (i < attempts)
   {
     Console.WriteLine("\nНеверный пароль");
