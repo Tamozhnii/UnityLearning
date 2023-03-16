@@ -1,6 +1,7 @@
 ﻿int currentNumber = 2;
+int maxValue = 100;
 Random random = new Random();
-int randomNumber = random.Next(100);
+int randomNumber = random.Next(maxValue);
 int extent = 0;
 double result = 0;
 
