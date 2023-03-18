@@ -33,10 +33,10 @@ int stepCount = 1;
 
 Console.WriteLine("Приветствую герой!");
 Console.WriteLine("Прежде чем бросить вызов боссу, ознакомся со своими скилами:");
-Console.WriteLine($"1. Shackles Flame (Оковы пламени) - наносит {shacklesFlameDamage} урона,\nа так же поджигает врага, нанося {burningDamage} урона за ход противника, в течении {burningTimeDuration} ходов.\nПерезарядка {shacklesFlameColdownDuration} хода");
-Console.WriteLine($"2. Energy Shield (Энергетический щит) - уменьшает 1 раз урон в {energyShieldBlocked} раза.\nПерезарядка {energyShieldColdownDuration} хода");
-Console.WriteLine($"3. Swamp Oil (Болотное масло) - Замедляет противника заставляя пропустить {swampOilSlowdownDuration} ход,\nа так же получить увеличенный в {swampOilUpFireDamage} раза урон от огня, и продлевает горение на {swampOilUpBurnDuration} ход.\nПерезарядка {swampOilColdownDuration} хода");
-Console.WriteLine($"4. Ether Scythe (Эфирная коса) - Наносит урон жертве в размере {etherScytheDamageInPercent}% от текущего здоровья противника,\nа если текущее здоровье противника составляет {etherScytheDamageInPercent}% от общего, то добивает мгновенно.\nПерезарядка {etherScytheColdownDuration} хода");
+Console.WriteLine($"{CommandShacklesFlame}. Shackles Flame (Оковы пламени) - наносит {shacklesFlameDamage} урона,\nа так же поджигает врага, нанося {burningDamage} урона за ход противника, в течении {burningTimeDuration} ходов.\nПерезарядка {shacklesFlameColdownDuration} хода");
+Console.WriteLine($"{CommandSwampOil}. Swamp Oil (Болотное масло) - Замедляет противника заставляя пропустить {swampOilSlowdownDuration} ход,\nа так же получить увеличенный в {swampOilUpFireDamage} раза урон от огня, и продлевает горение на {swampOilUpBurnDuration} ход.\nПерезарядка {swampOilColdownDuration} хода");
+Console.WriteLine($"{CommandEnergyShield}. Energy Shield (Энергетический щит) - уменьшает следующий получаемый урон в {energyShieldBlocked} раза.\nПерезарядка {energyShieldColdownDuration} хода");
+Console.WriteLine($"{CommandEtherScythe}. Ether Scythe (Эфирная коса) - Наносит урон жертве в размере {etherScytheDamageInPercent}% от текущего здоровья противника,\nа если текущее здоровье противника составляет {etherScytheDamageInPercent}% от общего, то добивает мгновенно.\nПерезарядка {etherScytheColdownDuration} хода");
 Console.ReadKey();
 Console.WriteLine("\nНачало сражения!");
 
@@ -44,11 +44,11 @@ while (bossCurrentHealthPoint > 0 && userHealthPoint > 0)
 {
   bool correctedCommand = true;
   Console.WriteLine($"\nХод {stepCount}.\nВарианты действий:");
-  Console.WriteLine("1. Shackles Flame");
-  Console.WriteLine("2. Swamp Oil");
-  Console.WriteLine("3. Energy Shield");
-  Console.WriteLine("4. Ether Scythe");
-  Console.WriteLine("5. Пропустить ход");
+  Console.WriteLine($"{CommandShacklesFlame}. Shackles Flame");
+  Console.WriteLine($"{CommandSwampOil}. Swamp Oil");
+  Console.WriteLine($"{CommandEnergyShield}. Energy Shield");
+  Console.WriteLine($"{CommandEtherScythe}. Ether Scythe");
+  Console.WriteLine($"{CommandSkipMove}. Пропустить ход");
   Console.Write("\nВаше действие: ");
   char userAction = Convert.ToChar(Console.ReadLine());
 
@@ -143,13 +143,25 @@ while (bossCurrentHealthPoint > 0 && userHealthPoint > 0)
 
   if (correctedCommand)
   {
-    if (shacklesFlameColdown > 0) shacklesFlameColdown--;
+    if (shacklesFlameColdown > 0)
+    {
+      shacklesFlameColdown--;
+    }
 
-    if (etherScytheColdown > 0) etherScytheColdown--;
+    if (etherScytheColdown > 0)
+    {
+      etherScytheColdown--;
+    }
 
-    if (swampOilColdown > 0) swampOilColdown--;
+    if (swampOilColdown > 0)
+    {
+      swampOilColdown--;
+    }
 
-    if (energyShieldColdown > 0) energyShieldColdown--;
+    if (energyShieldColdown > 0)
+    {
+      energyShieldColdown--;
+    }
 
     if (bossCurrentHealthPoint > 0)
     {
@@ -182,7 +194,11 @@ while (bossCurrentHealthPoint > 0 && userHealthPoint > 0)
   }
 }
 
-if (userHealthPoint <= 0)
+if (userHealthPoint <= 0 && bossCurrentHealthPoint <= 0)
+{
+  Console.WriteLine("Ничья");
+}
+else if (userHealthPoint <= 0)
 {
   Console.WriteLine("Потрачено");
 }
