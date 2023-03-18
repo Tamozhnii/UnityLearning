@@ -14,4 +14,16 @@ for (int j = 0; j < array.GetLength(0); j++)
   multiplicationOfFirstColumn += array[j, firstColumnIndex];
 }
 
-Console.WriteLine($"Сумма второй строки = {sumOfSecondLine}, произведение первого столбца = {multiplicationOfFirstColumn}");
+for (int i = 0; i < array.GetLength(0); i++)
+{
+  Console.Write("\n[ ");
+
+  for (int j = 0; j < array.GetLength(1); j++)
+  {
+    Console.Write($"{array[i, j]} ");
+  }
+
+  Console.Write("]");
+}
+
+Console.WriteLine($"\n\nСумма второй строки = {sumOfSecondLine}, произведение первого столбца = {multiplicationOfFirstColumn}");
