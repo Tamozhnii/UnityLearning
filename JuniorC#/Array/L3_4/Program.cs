@@ -1,17 +1,13 @@
 ﻿const string CommandSum = "sum";
 const string CommandExit = "exit";
+bool isProgramRun = true;
 
-int[] array = new int[1];
+int[] numbers = { };
 string userCommand = "";
 Console.WriteLine("Введите числа для подсчета суммы:");
 
-while (userCommand != CommandExit)
+while (isProgramRun)
 {
-  if (userCommand == CommandSum)
-  {
-    array = new int[1];
-  }
-
   userCommand = Console.ReadLine();
 
   switch (userCommand)
@@ -19,27 +15,28 @@ while (userCommand != CommandExit)
     case CommandSum:
       int sum = 0;
 
-      foreach (int num in array)
+      foreach (int num in numbers)
       {
         sum += num;
       }
 
-      Console.WriteLine($"{sum}\n");
+      Console.WriteLine($"Сумма = {sum}");
       break;
 
     case CommandExit:
+      isProgramRun = false;
       break;
 
     default:
-      int[] tempArray = new int[array.Length + 1];
+      int[] tempArray = new int[numbers.Length + 1];
 
-      for (int i = 0; i < array.Length; i++)
+      for (int i = 0; i < numbers.Length; i++)
       {
-        tempArray[i] = array[i];
+        tempArray[i] = numbers[i];
       }
 
       tempArray[tempArray.Length - 1] = Convert.ToInt32(userCommand);
-      array = tempArray;
+      numbers = tempArray;
       break;
   }
 }
