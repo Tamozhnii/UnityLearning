@@ -1,6 +1,7 @@
 ﻿Random random = new Random();
 int maxValue = 10;
-int[] numbers = new int[30];
+int arrayLength = 30;
+int[] numbers = new int[arrayLength];
 
 Console.Write("[ ");
 
@@ -13,18 +14,20 @@ for (int i = 0; i < numbers.Length; i++)
 Console.Write("]\n");
 Console.Write("Локальные максимальные числа: ");
 
-for (int j = 0; j < numbers.Length; j++)
+if (numbers[0] > numbers[1])
 {
-  if (j == 0)
+  Console.Write($"{numbers[0]} ");
+}
+
+for (int j = 1; j < numbers.Length - 1; j++)
+{
+  if (numbers[j] > numbers[j + 1] && numbers[j] > numbers[j - 1])
   {
-    if (numbers[j] > numbers[j + 1]) Console.Write($"{numbers[j]} ");
+    Console.Write($"{numbers[j]} ");
   }
-  else if (j == numbers.Length - 1)
-  {
-    if (numbers[j] > numbers[j - 1]) Console.Write($"{numbers[j]} ");
-  }
-  else
-  {
-    if (numbers[j] > numbers[j + 1] && numbers[j] > numbers[j - 1]) Console.Write($"{numbers[j]} ");
-  }
+}
+
+if (numbers[numbers.Length - 1] > numbers[numbers.Length - 2])
+{
+  Console.Write($"{numbers[numbers.Length - 1]} ");
 }
