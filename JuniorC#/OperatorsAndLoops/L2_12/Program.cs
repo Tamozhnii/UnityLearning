@@ -1,8 +1,8 @@
-﻿const char UseShacklesFlame = '1';
-const char UseSwampOil = '2';
-const char UseEnergyShield = '3';
-const char UseEtherScythe = '4';
-const char SkipMove = '5';
+﻿const char CommandShacklesFlame = '1';
+const char CommandSwampOil = '2';
+const char CommandEnergyShield = '3';
+const char CommandEtherScythe = '4';
+const char CommandSkipMove = '5';
 
 int shacklesFlameDamage = 50;
 int shacklesFlameColdownDuration = 2;
@@ -38,7 +38,7 @@ Console.WriteLine($"2. Energy Shield (Энергетический щит) - у�
 Console.WriteLine($"3. Swamp Oil (Болотное масло) - Замедляет противника заставляя пропустить {swampOilSlowdownDuration} ход,\nа так же получить увеличенный в {swampOilUpFireDamage} раза урон от огня, и продлевает горение на {swampOilUpBurnDuration} ход.\nПерезарядка {swampOilColdownDuration} хода");
 Console.WriteLine($"4. Ether Scythe (Эфирная коса) - Наносит урон жертве в размере {etherScytheDamageInPercent}% от текущего здоровья противника,\nа если текущее здоровье противника составляет {etherScytheDamageInPercent}% от общего, то добивает мгновенно.\nПерезарядка {etherScytheColdownDuration} хода");
 Console.ReadKey();
-Console.WriteLine("\n\nНачало сражения!");
+Console.WriteLine("\nНачало сражения!");
 
 while (bossCurrentHealthPoint > 0 && userHealthPoint > 0)
 {
@@ -54,7 +54,7 @@ while (bossCurrentHealthPoint > 0 && userHealthPoint > 0)
 
   switch (userAction)
   {
-    case UseShacklesFlame:
+    case CommandShacklesFlame:
       if (shacklesFlameColdown > 0)
       {
         Console.WriteLine($"Способность еще перезаряжается, осталось {shacklesFlameColdown} ход(-а)");
@@ -77,7 +77,7 @@ while (bossCurrentHealthPoint > 0 && userHealthPoint > 0)
       shacklesFlameColdown = shacklesFlameColdownDuration + currentStep;
       break;
 
-    case UseSwampOil:
+    case CommandSwampOil:
       if (swampOilColdown > 0)
       {
         Console.WriteLine($"Способность еще перезаряжается, осталось {swampOilColdown} ход(-а)");
@@ -98,7 +98,7 @@ while (bossCurrentHealthPoint > 0 && userHealthPoint > 0)
       swampOilColdown = swampOilColdownDuration + currentStep;
       break;
 
-    case UseEnergyShield:
+    case CommandEnergyShield:
       if (energyShieldColdown > 0)
       {
         Console.WriteLine($"Способность еще перезаряжается, осталось {energyShieldColdown} ход(-а)");
@@ -110,7 +110,7 @@ while (bossCurrentHealthPoint > 0 && userHealthPoint > 0)
       energyShieldColdown = energyShieldColdownDuration + currentStep;
       break;
 
-    case UseEtherScythe:
+    case CommandEtherScythe:
       if (etherScytheColdown > 0)
       {
         Console.WriteLine($"Способность еще перезаряжается, осталось {etherScytheColdown} ход(-а)");
@@ -119,6 +119,7 @@ while (bossCurrentHealthPoint > 0 && userHealthPoint > 0)
       }
 
       int leftBossHealthPointInPercent = bossCurrentHealthPoint * 100 / bossMaxHealthPoint;
+
       if (leftBossHealthPointInPercent <= etherScytheDamageInPercent)
       {
         bossCurrentHealthPoint -= bossCurrentHealthPoint;
@@ -131,7 +132,7 @@ while (bossCurrentHealthPoint > 0 && userHealthPoint > 0)
       etherScytheColdown = etherScytheColdownDuration + currentStep;
       break;
 
-    case SkipMove:
+    case CommandSkipMove:
       break;
 
     default:
@@ -143,8 +144,11 @@ while (bossCurrentHealthPoint > 0 && userHealthPoint > 0)
   if (correctedCommand)
   {
     if (shacklesFlameColdown > 0) shacklesFlameColdown--;
+
     if (etherScytheColdown > 0) etherScytheColdown--;
+
     if (swampOilColdown > 0) swampOilColdown--;
+
     if (energyShieldColdown > 0) energyShieldColdown--;
 
     if (bossCurrentHealthPoint > 0)
@@ -180,7 +184,7 @@ while (bossCurrentHealthPoint > 0 && userHealthPoint > 0)
 
 if (userHealthPoint <= 0)
 {
-  Console.WriteLine("Вы проиграли");
+  Console.WriteLine("Потрачено");
 }
 else if (bossCurrentHealthPoint <= 0)
 {
