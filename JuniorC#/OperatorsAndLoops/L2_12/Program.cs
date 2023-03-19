@@ -42,7 +42,7 @@ Console.WriteLine("\nНачало сражения!");
 
 while (bossCurrentHealthPoint > 0 && userHealthPoint > 0)
 {
-  bool correctedCommand = true;
+  bool isCorrectedCommand = true;
   Console.WriteLine($"\nХод {stepCount}.\nВарианты действий:");
   Console.WriteLine($"{CommandShacklesFlame}. Shackles Flame");
   Console.WriteLine($"{CommandSwampOil}. Swamp Oil");
@@ -58,7 +58,7 @@ while (bossCurrentHealthPoint > 0 && userHealthPoint > 0)
       if (shacklesFlameColdown > 0)
       {
         Console.WriteLine($"Способность еще перезаряжается, осталось {shacklesFlameColdown} ход(-а)");
-        correctedCommand = false;
+        isCorrectedCommand = false;
         break;
       }
 
@@ -81,7 +81,7 @@ while (bossCurrentHealthPoint > 0 && userHealthPoint > 0)
       if (swampOilColdown > 0)
       {
         Console.WriteLine($"Способность еще перезаряжается, осталось {swampOilColdown} ход(-а)");
-        correctedCommand = false;
+        isCorrectedCommand = false;
         break;
       }
 
@@ -102,7 +102,7 @@ while (bossCurrentHealthPoint > 0 && userHealthPoint > 0)
       if (energyShieldColdown > 0)
       {
         Console.WriteLine($"Способность еще перезаряжается, осталось {energyShieldColdown} ход(-а)");
-        correctedCommand = false;
+        isCorrectedCommand = false;
         break;
       }
 
@@ -114,7 +114,7 @@ while (bossCurrentHealthPoint > 0 && userHealthPoint > 0)
       if (etherScytheColdown > 0)
       {
         Console.WriteLine($"Способность еще перезаряжается, осталось {etherScytheColdown} ход(-а)");
-        correctedCommand = false;
+        isCorrectedCommand = false;
         break;
       }
 
@@ -137,11 +137,11 @@ while (bossCurrentHealthPoint > 0 && userHealthPoint > 0)
 
     default:
       Console.WriteLine("Такого действия не существует");
-      correctedCommand = false;
+      isCorrectedCommand = false;
       break;
   }
 
-  if (correctedCommand)
+  if (isCorrectedCommand)
   {
     if (shacklesFlameColdown > 0)
     {
