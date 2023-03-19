@@ -1,5 +1,5 @@
 ﻿Random random = new Random();
-int minValue = -60;
+int minValue = -55;
 int maxValue = -50;
 int firstLength = 10;
 int secondLength = 10;
