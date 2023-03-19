@@ -1,7 +1,7 @@
 ﻿const string CommandAddDossier = "1";
 const string CommandShowAllDossiers = "2";
 const string CommandRemoveDossier = "3";
-const string CommandSurnameSearch = "4";
+const string CommandSearchDossier = "4";
 const string CommandExit = "5";
 
 string[] fullNamesArray = new string[] { };
@@ -120,7 +120,7 @@ while (isProgramOn)
   Console.WriteLine($"{CommandAddDossier}. Добавить новое досье");
   Console.WriteLine($"{CommandShowAllDossiers}. Показать все досье");
   Console.WriteLine($"{CommandRemoveDossier}. Удалить досье");
-  Console.WriteLine($"{CommandSurnameSearch}. Найти досье по фамилии");
+  Console.WriteLine($"{CommandSearchDossier}. Найти досье по фамилии");
   Console.WriteLine($"{CommandExit}. Выйти");
   string userCommand = Console.ReadLine();
 
@@ -152,10 +152,10 @@ while (isProgramOn)
       Console.ReadKey();
       break;
 
-    case CommandSurnameSearch:
+    case CommandSearchDossier:
       Console.Write("\nКакую фамилию ищите?: ");
       string searchSurname = Console.ReadLine();
-      SurnameSearch(searchSurname);
+      SearchDossier(searchSurname);
       Console.ReadKey();
       break;
 
