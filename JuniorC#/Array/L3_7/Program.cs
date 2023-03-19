@@ -1,5 +1,6 @@
 ﻿string sentence = "Это программа по разделению строки на слова";
-string[] words = sentence.Split(' ');
+char splitValue = ' ';
+string[] words = sentence.Split(splitValue);
 
 foreach (string word in words)
 {
