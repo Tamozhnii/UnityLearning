@@ -1,6 +1,6 @@
 ﻿Random random = new Random();
-int minValue = 1;
-int maxValue = 10;
+int minValue = -60;
+int maxValue = -50;
 int firstLength = 10;
 int secondLength = 10;
 int[,] numbers = new int[firstLength, secondLength];
@@ -11,7 +11,7 @@ for (int i = 0; i < numbers.GetLength(0); i++)
 {
   for (int j = 0; j < numbers.GetLength(1); j++)
   {
-    numbers[i, j] = random.Next(minValue, maxValue) * -1;
+    numbers[i, j] = random.Next(minValue, maxValue);
   }
 }
 
