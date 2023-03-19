@@ -45,7 +45,7 @@ void ShowAllDossiers()
   }
 }
 
-void SurnameSearch(string surname)
+void SearchDossier(string surname)
 {
   if (fullNamesArray.Length > 0)
   {
@@ -113,7 +113,6 @@ void RemoveDossier(int sequenceNumber)
     Console.WriteLine("Такого досье не существует");
   }
 }
-
 
 while (isProgramOn)
 {
