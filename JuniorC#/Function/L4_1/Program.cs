@@ -8,26 +8,34 @@ string[] fullNamesArray = new string[] { };
 string[] positionsArray = new string[] { };
 bool isProgramOn = true;
 
+void AddElementIntoArray(ref string[] array, string element)
+{
+  string[] tempArray = new string[array.Length + 1];
+
+  for (int i = 0; i < array.Length; i++)
+  {
+    tempArray[i] = array[i];
+  }
+
+  tempArray[array.Length] = element;
+  array = tempArray;
+}
+
 void AddNewDossier(string fullName, string position)
 {
-  string[] tempFullNamesArray = new string[fullNamesArray.Length + 1];
-  string[] tempPositionsArray = new string[positionsArray.Length + 1];
-
-  for (int i = 0; i < fullNamesArray.Length; i++)
-  {
-    tempFullNamesArray[i] = fullNamesArray[i];
-  }
-
-  for (int i = 0; i < positionsArray.Length; i++)
-  {
-    tempPositionsArray[i] = positionsArray[i];
-  }
-
-  tempFullNamesArray[fullNamesArray.Length] = fullName;
-  tempPositionsArray[positionsArray.Length] = position;
-  fullNamesArray = tempFullNamesArray;
-  positionsArray = tempPositionsArray;
+  Console.Write("\nВведите фамилию: ");
+  string surname = Console.ReadLine();
+  Console.Write("Введите имя: ");
+  string name = Console.ReadLine();
+  Console.Write("Введите отчество: ");
+  string patronymic = Console.ReadLine();
+  Console.Write("Введите должность: ");
+  string position = Console.ReadLine();
+  string fullName = $"{surname} {name} {patronymic}";
+  AddElementIntoArray(ref fullNamesArray, fullName);
+  AddElementIntoArray(ref positionsArray, position);
   Console.WriteLine("Досье добавлено");
+  Console.ReadKey();
 }
 
 void ShowAllDossiers()
@@ -43,15 +51,23 @@ void ShowAllDossiers()
   {
     Console.WriteLine("Список  пуст");
   }
+  Console.ReadKey();
 }
 
 void SearchDossier(string surname)
 {
+  Console.Write("\nКакую фамилию ищите?: ");
+  string searchSurname = Console.ReadLine();
+
   if (fullNamesArray.Length > 0)
   {
+    int surnameIndex = 0;
+
     for (int i = 0; i < fullNamesArray.Length; i++)
     {
-      if (fullNamesArray[i].Contains(surname))
+      string currentSurname = fullNamesArray[i].Split(' ')[surnameIndex];
+
+      if (currentSurname == surname)
       {
         Console.WriteLine($"{i + 1}. {fullNamesArray[i]} - {positionsArray[i]}");
       }
@@ -65,53 +81,44 @@ void SearchDossier(string surname)
   {
     Console.WriteLine("Данные для поиска отсутствуют");
   }
+
+  Console.ReadKey();
+}
+
+void RemoveElementIntoArray(ref string[] array, int index)
+{
+  string[] tempArray = new string[array.Length - 1];
+
+  for (int i = 0; i < index; i++)
+  {
+    tempArray[i] = array[i];
+  }
+
+  for (int i = index + 1; i < array.Length; i++)
+  {
+    tempArray[i - 1] = array[i];
+  }
+
+  array = tempArray;
 }
 
 void RemoveDossier(int sequenceNumber)
 {
+  Console.Write("\nУкажите номер досье которое хотите удалить: ");
+  int sequenceNumber = Convert.ToInt32(Console.ReadLine());
+
   if (fullNamesArray.Length >= sequenceNumber)
   {
-    string[] tempFullNamesArray = new string[fullNamesArray.Length - 1];
-    string[] tempPositionsArray = new string[positionsArray.Length - 1];
-
-    for (int i = 0; i < fullNamesArray.Length; i++)
-    {
-      if (i != sequenceNumber - 1)
-      {
-        if (i > sequenceNumber - 1)
-        {
-          tempFullNamesArray[i - 1] = fullNamesArray[i];
-        }
-        else
-        {
-          tempFullNamesArray[i] = fullNamesArray[i];
-        }
-      }
-    }
-
-    for (int j = 0; j < positionsArray.Length; j++)
-    {
-      if (j != sequenceNumber - 1)
-      {
-        if (j > sequenceNumber - 1)
-        {
-          tempPositionsArray[j - 1] = positionsArray[j];
-        }
-        else
-        {
-          tempPositionsArray[j] = positionsArray[j];
-        }
-      }
-    }
-
-    fullNamesArray = tempFullNamesArray;
-    positionsArray = tempPositionsArray;
+    RemoveElementIntoArray(ref fullNamesArray, sequenceNumber - 1);
+    RemoveElementIntoArray(ref positionsArray, sequenceNumber - 1);
     Console.WriteLine("Досье успешно удалено");
   }
   else
   {
     Console.WriteLine("Такого досье не существует");
   }
+
+  Console.ReadKey();
 }
 
 while (isProgramOn)
@@ -127,36 +134,19 @@ while (isProgramOn)
   switch (userCommand)
   {
     case CommandAddDossier:
-      Console.Write("\nВведите фамилию: ");
-      string surname = Console.ReadLine();
-      Console.Write("Введите имя: ");
-      string name = Console.ReadLine();
-      Console.Write("Введите отчество: ");
-      string patronymic = Console.ReadLine();
-      Console.Write("Введите должность: ");
-      string position = Console.ReadLine();
-      string fullName = $"{surname} {name} {patronymic}";
       AddNewDossier(fullName, position);
-      Console.ReadKey();
       break;
 
     case CommandShowAllDossiers:
       ShowAllDossiers();
-      Console.ReadKey();
       break;
 
     case CommandRemoveDossier:
-      Console.Write("\nУкажите номер досье которое хотите удалить: ");
-      int sequenceNumber = Convert.ToInt32(Console.ReadLine());
       RemoveDossier(sequenceNumber);
-      Console.ReadKey();
       break;
 
     case CommandSearchDossier:
-      Console.Write("\nКакую фамилию ищите?: ");
-      string searchSurname = Console.ReadLine();
       SearchDossier(searchSurname);
-      Console.ReadKey();
       break;
 
     case CommandExit:
