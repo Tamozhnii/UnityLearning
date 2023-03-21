@@ -10,7 +10,7 @@ void DrowBar(int startPosition, int lastPosition, char symbol)
   }
 }
 
-void ShowHealthbar(int healthPointsInPercent)
+void ShowHealthbar(float healthPointsInPercent)
 {
   int currentHealthPoints = Convert.ToInt32(maxHealthPoints * healthPointsInPercent);
   Console.Write("[");
