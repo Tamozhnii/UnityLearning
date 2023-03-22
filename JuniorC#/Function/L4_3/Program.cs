@@ -4,13 +4,13 @@ namespace L4_3
 {
   class Program
   {
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
-      Program program = new Program();
-      Console.WriteLine(program.ConvertToInt());
+      int convertedNumber = GetNumber();
+      Console.WriteLine(convertedNumber);
     }
 
-    private int ConvertToInt()
+    private static int GetNumber()
     {
       string userInput = "";
       int number = 0;
@@ -25,5 +25,4 @@ namespace L4_3
       return number;
     }
   }
-
 }
