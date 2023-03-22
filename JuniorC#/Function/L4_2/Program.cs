@@ -6,7 +6,6 @@ namespace L4_2
   {
     private static void Main(string[] args)
     {
-
       int healthbarLength = 20;
       int currentHealthPointsInPercent = 66;
       ShowHealthbar(currentHealthPointsInPercent, healthbarLength);
