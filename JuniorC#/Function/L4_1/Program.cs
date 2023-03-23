@@ -58,7 +58,7 @@ namespace L4_1
       }
     }
 
-    private static void AddElementIntoArray(ref string[] array, string element)
+    private static string[] AddElementIntoArray(string[] array, string element)
     {
       string[] tempArray = new string[array.Length + 1];
 
@@ -69,6 +69,7 @@ namespace L4_1
 
       tempArray[array.Length] = element;
       array = tempArray;
+      return array;
     }
 
     private static void AddNewDossier(ref string[] fullNamesArray, ref string[] positionsArray, char separator)
@@ -82,8 +83,8 @@ namespace L4_1
       Console.Write("Введите должность: ");
       string position = Console.ReadLine();
       string fullName = surname + separator + name + separator + patronymic;
-      AddElementIntoArray(ref fullNamesArray, fullName);
-      AddElementIntoArray(ref positionsArray, position);
+      fullNamesArray = AddElementIntoArray(fullNamesArray, fullName);
+      positionsArray = AddElementIntoArray(positionsArray, position);
       Console.WriteLine("Досье добавлено");
       Console.ReadKey();
     }
@@ -114,6 +115,7 @@ namespace L4_1
       if (fullNamesArray.Length > 0)
       {
         int surnameIndex = 0;
+        bool isNotFound = true;
 
         for (int i = 0; i < fullNamesArray.Length; i++)
         {
@@ -121,13 +123,15 @@ namespace L4_1
 
           if (currentSurname.ToLower() == searchSurname.ToLower())
           {
+            isNotFound = false;
             int sequenceNumber = i + 1;
             Console.WriteLine($"{sequenceNumber}. {fullNamesArray[i]} - {positionsArray[i]}");
           }
-          else
-          {
-            Console.WriteLine($"Досье по фамилии {searchSurname} не найдено");
-          }
+        }
+
+        if (isNotFound)
+        {
+          Console.WriteLine($"Досье по фамилии {searchSurname} не найдено");
         }
       }
       else
@@ -157,10 +161,11 @@ namespace L4_1
 
     private static void RemoveDossier(ref string[] fullNamesArray, ref string[] positionsArray)
     {
+      int firstElementIndex = 0;
       Console.Write("\nУкажите номер досье которое хотите удалить: ");
       int sequenceNumber = Convert.ToInt32(Console.ReadLine());
 
-      if (fullNamesArray.Length >= sequenceNumber)
+      if (fullNamesArray.Length >= sequenceNumber && sequenceNumber > firstElementIndex)
       {
         RemoveElementIntoArray(ref fullNamesArray, sequenceNumber - 1);
         RemoveElementIntoArray(ref positionsArray, sequenceNumber - 1);
