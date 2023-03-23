@@ -6,9 +6,9 @@ namespace L4_2
   {
     private static void Main(string[] args)
     {
-      int healthbarLength = 20;
+      int healthBarLength = 20;
       int currentHealthPointsInPercent = 66;
-      ShowHealthbar(currentHealthPointsInPercent, healthbarLength);
+      ShowHealthBar(currentHealthPointsInPercent, healthBarLength);
     }
 
     private static void DrawBar(int startPosition, int lastPosition, char symbol)
@@ -19,13 +19,28 @@ namespace L4_2
       }
     }
 
-    private static void ShowHealthbar(int healthPointsInPercent, int healthbarLength)
+    private static void ShowHealthBar(int healthPointsInPercent, int healthbarLength)
     {
+      int minHealthPoints = 0;
       float maxHealthPointsInPercent = 100f;
-      int startPosition = 0;
-      int currentHealthPoints = Convert.ToInt32(healthbarLength / maxHealthPointsInPercent * healthPointsInPercent);
+      int currentHealthPointsInPercent = 0;
+
+      if (healthPointsInPercent > maxHealthPointsInPercent)
+      {
+        currentHealthPointsInPercent = Convert.ToInt32(maxHealthPointsInPercent);
+      }
+      else if (healthPointsInPercent < minHealthPoints)
+      {
+        currentHealthPointsInPercent = minHealthPoints;
+      }
+      else
+      {
+        currentHealthPointsInPercent = healthPointsInPercent;
+      }
+
+      int currentHealthPoints = Convert.ToInt32(healthbarLength / maxHealthPointsInPercent * currentHealthPointsInPercent);
       Console.Write("[");
-      DrawBar(startPosition, currentHealthPoints, '†');
+      DrawBar(minHealthPoints, currentHealthPoints, '†');
       DrawBar(currentHealthPoints, healthbarLength, '_');
       Console.Write("]");
     }
