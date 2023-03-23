@@ -17,6 +17,7 @@ namespace L4_4
       int maxCoins = 5;
       int coinsCounter = 0;
       int playerX = 0, playerY = 0, directionVertical = 0, directionHorizontal = 0;
+      int counterX = 5, counterY = 15;
       string fileName = "map";
       char[,] map = ReadMap(fileName, playerSymbol, ref playerX, ref playerY);
       DrawMap(map);
@@ -56,6 +57,8 @@ namespace L4_4
         }
 
         TakeCoins(ref coinsCounter, ref map, playerX, playerY, coinSymbol, emptySymbol);
+        Console.SetCursorPosition(counterX, counterY);
+        Console.Write($"Coins: {counter}");
 
         if (coinsCounter == maxCoins)
         {
@@ -122,17 +125,11 @@ namespace L4_4
 
     private static void TakeCoins(ref int counter, ref char[,] map, int x, int y, char coin, char empty)
     {
-      int counterX = 5, counterY = 15;
-
       if (map[x, y] == coin)
       {
         map[x, y] = empty;
         counter++;
       }
-
-      Console.SetCursorPosition(counterX, counterY);
-      Console.Write($"Coins: {counter}");
     }
-
   }
 }
