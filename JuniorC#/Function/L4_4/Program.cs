@@ -58,7 +58,7 @@ namespace L4_4
 
         TakeCoins(ref coinsCounter, ref map, playerX, playerY, coinSymbol, emptySymbol);
         Console.SetCursorPosition(counterX, counterY);
-        Console.Write($"Coins: {counter}");
+        Console.Write($"Coins: {coinsCounter}");
 
         if (coinsCounter == maxCoins)
         {
