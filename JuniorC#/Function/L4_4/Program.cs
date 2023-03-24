@@ -7,8 +7,14 @@ namespace L4_4
   {
     private static void Main(string[] args)
     {
+      const ConsoleKey Up = ConsoleKey.UpArrow;
+      const ConsoleKey Down = ConsoleKey.DownArrow;
+      const ConsoleKey Left = ConsoleKey.LeftArrow;
+      const ConsoleKey Right = ConsoleKey.RightArrow;
+
       Console.CursorVisible = false;
       bool isGameOn = true;
+      string fileName = "map";
       char playerSymbol = '@';
       char wallHorizontalSymbol = '_';
       char wallVerticalSymbol = '|';
@@ -16,9 +22,12 @@ namespace L4_4
       char coinSymbol = '$';
       int maxCoins = 5;
       int coinsCounter = 0;
-      int playerX = 0, playerY = 0, directionVertical = 0, directionHorizontal = 0;
-      int counterX = 5, counterY = 15;
-      string fileName = "map";
+      int playerX = 0;
+      int playerY = 0;
+      int directionVertical = 0;
+      int directionHorizontal = 0;
+      int counterX = 5;
+      int counterY = 15;
       char[,] map = ReadMap(fileName, playerSymbol, ref playerX, ref playerY);
       DrawMap(map);
 
@@ -30,19 +39,22 @@ namespace L4_4
 
           switch (key.Key)
           {
-            case ConsoleKey.UpArrow:
+            case Up:
               directionVertical = -1;
               directionHorizontal = 0;
               break;
-            case ConsoleKey.DownArrow:
+
+            case Down:
               directionVertical = 1;
               directionHorizontal = 0;
               break;
-            case ConsoleKey.LeftArrow:
+
+            case Left:
               directionVertical = 0;
               directionHorizontal = -1;
               break;
-            case ConsoleKey.RightArrow:
+
+            case Right:
               directionVertical = 0;
               directionHorizontal = 1;
               break;
@@ -56,7 +68,7 @@ namespace L4_4
           Move(ref playerX, ref playerY, directionVertical, directionHorizontal, emptySymbol, playerSymbol);
         }
 
-        TakeCoins(ref coinsCounter, ref map, playerX, playerY, coinSymbol, emptySymbol);
+        coinsCounter = TakeCoins(coinsCounter, map, playerX, playerY, coinSymbol, emptySymbol);
         Console.SetCursorPosition(counterX, counterY);
         Console.Write($"Coins: {coinsCounter}");
 
@@ -109,27 +121,29 @@ namespace L4_4
     private static void Move(
       ref int x,
       ref int y,
-      int dirV,
-      int dirH,
+      int directionVertical,
+      int directionHorizontal,
       char emptySymbol,
       char playerSymbol
     )
     {
       Console.SetCursorPosition(y, x);
       Console.Write(emptySymbol);
-      x += dirV;
-      y += dirH;
+      x += directionVertical;
+      y += directionHorizontal;
       Console.SetCursorPosition(y, x);
       Console.Write(playerSymbol);
     }
 
-    private static void TakeCoins(ref int counter, ref char[,] map, int x, int y, char coin, char empty)
+    private static int TakeCoins(int counter, char[,] map, int x, int y, char coin, char empty)
     {
       if (map[x, y] == coin)
       {
         map[x, y] = empty;
         counter++;
       }
+
+      return counter;
     }
   }
 }
