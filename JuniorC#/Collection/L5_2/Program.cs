@@ -7,15 +7,8 @@ namespace L5_2
     static void Main(string[] args)
     {
       Queue<int> customers = new Queue<int>();
-      int balance = 0;
       InitializeQueue(customers);
-
-      while (customers.Count > 0)
-      {
-        balance += ServeCustomer(customers, balance);
-        Console.ReadKey();
-        Console.Clear();
-      }
+      ServeCustomer(customers);
     }
 
     static void InitializeQueue(Queue<int> queue)
@@ -30,12 +23,18 @@ namespace L5_2
       }
     }
 
-    static int ServeCustomer(Queue<int> customers, int balance)
+    static void ServeCustomer(Queue<int> customers)
     {
-      int customerBuying = customers.Dequeue();
-      balance += customerBuying;
-      Console.WriteLine($"На ваш баланс поступило {customerBuying}$\nТекущий баланс составляет {balance}$\n");
-      return balance;
+      int balance = 0;
+
+      while (customers.Count > 0)
+      {
+        int customerBuying = customers.Dequeue();
+        balance += customerBuying;
+        Console.WriteLine($"На ваш баланс поступило {customerBuying}$\nТекущий баланс составляет {balance}$\n");
+        Console.ReadKey();
+        Console.Clear();
+      }
     }
   }
 }
