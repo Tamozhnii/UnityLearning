@@ -6,20 +6,12 @@ namespace L5_1
   {
     static void Main(string[] args)
     {
+      const string CommandExit = "Выйти";
+
       Dictionary<string, string> fruits = new Dictionary<string, string>();
       fruits.Add("Арбуз", "это ягода");
       fruits.Add("Помидор", "это ягода");
       fruits.Add("Банан", "это ягода");
-      TakeAnswer(fruits);
-    }
-
-    private static void TakeAnswer(Dictionary<string, string> dictionary)
-    {
-      const string CommandExit = "Выйти";
-      const string CommandWatermelon = "Арбуз";
-      const string CommandTomato = "Помидор";
-      const string CommandBanana = "Банан";
-
       bool isAsking = true;
 
       while (isAsking)
@@ -29,20 +21,26 @@ namespace L5_1
 
         switch (userInput)
         {
-          case CommandWatermelon:
-          case CommandTomato:
-          case CommandBanana:
-            Console.WriteLine(dictionary[userInput]);
-            break;
-
           case CommandExit:
             isAsking = false;
             break;
 
           default:
-            Console.WriteLine("Такой плод не найден, попробуйте снова");
+            TakeAnswer(fruits, userInput);
             break;
         }
+      }
+    }
+
+    private static void TakeAnswer(Dictionary<string, string> dictionary, string key)
+    {
+      if (dictionary.ContainsKey(key))
+      {
+        Console.WriteLine(dictionary[key]);
+      }
+      else
+      {
+        Console.WriteLine("Такой плод не найден, попробуйте снова");
       }
     }
   }
