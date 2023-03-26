@@ -15,27 +15,27 @@ namespace L6_1
 
   class Player
   {
-    private string NickName;
-    private Race Race;
-    private Specialty Specialty;
+    private string _nickName;
+    private Race _race;
+    private Specialty _specialty;
 
     public Player()
     {
-      NickName = "Murduk";
-      Race = Race.Ork;
-      Specialty = Specialty.Rogue;
+      _nickName = "Murduk";
+      _race = Race.Ork;
+      _specialty = Specialty.Rogue;
     }
 
     public Player(string nickName, Race race, Specialty specialty)
     {
-      NickName = nickName;
-      Race = race;
-      Specialty = specialty;
+      _nickName = nickName;
+      _race = race;
+      _specialty = specialty;
     }
 
     public override string ToString()
     {
-      return $"{NickName} - раса: {Race}, класс: {Specialty}";
+      return $"{_nickName} - раса: {_race}, класс: {_specialty}";
     }
   }
 
