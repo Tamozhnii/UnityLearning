@@ -56,8 +56,17 @@ namespace L5_4
       string fullName = Console.ReadLine();
       Console.Write("Введите должность: ");
       string position = Console.ReadLine();
-      dossiers.Add(fullName, position);
-      Console.WriteLine("Досье добавлено");
+
+      if (dossiers.ContainsKey(fullName))
+      {
+        Console.WriteLine("Досье на данного пользователя уже существует");
+      }
+      else
+      {
+        dossiers.Add(fullName, position);
+        Console.WriteLine("Досье добавлено");
+      }
+
       Console.ReadKey();
     }
 
