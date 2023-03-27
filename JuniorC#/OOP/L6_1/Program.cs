@@ -7,7 +7,7 @@ namespace L6_1
     static void Main(string[] args)
     {
       Player player1 = new Player();
-      Player player2 = new Player("Aragorn", Race.Human, Specialty.Warrior);
+      Player player2 = new Player("Aragorn", Races.Human, Specialties.Warrior);
       Console.WriteLine(player1.ToString());
       Console.WriteLine(player2.ToString());
     }
@@ -16,17 +16,17 @@ namespace L6_1
   class Player
   {
     private string _nickName;
-    private Race _race;
-    private Specialty _specialty;
+    private Races _race;
+    private Specialties _specialty;
 
     public Player()
     {
       _nickName = "Murduk";
-      _race = Race.Ork;
-      _specialty = Specialty.Rogue;
+      _race = Races.Ork;
+      _specialty = Specialties.Rogue;
     }
 
-    public Player(string nickName, Race race, Specialty specialty)
+    public Player(string nickName, Races race, Specialties specialty)
     {
       _nickName = nickName;
       _race = race;
@@ -39,7 +39,7 @@ namespace L6_1
     }
   }
 
-  enum Race
+  enum Races
   {
     Elf,
     Human,
@@ -47,7 +47,7 @@ namespace L6_1
     Ork,
   }
 
-  enum Specialty
+  enum Specialties
   {
     Warrior,
     Magician,
