@@ -8,42 +8,42 @@ namespace L6_1
     {
       Player player1 = new Player("Tom", '$', 4, 8);
       Player player2 = new Player();
-      Drower drower = new Drower();
-      drower.Drow(player1);
-      drower.Drow(player2);
+      Drawer drawer = new Drawer();
+      drawer.Draw(player1);
+      drawer.Draw(player2);
       Console.ReadKey();
     }
   }
 
   class Player
   {
-    public int X { get; private set; }
-    public int Y { get; private set; }
-    public string Name { get; private set; }
-    public char Symbol { get; private set; }
-
     public Player()
     {
       Name = "Unknown";
       Symbol = '†';
-      X = 5;
-      Y = 5;
+      PositionX = 5;
+      PositionY = 5;
     }
 
     public Player(string name, char symbol, int x, int y)
     {
       Name = name;
       Symbol = symbol;
-      X = x;
-      Y = y;
+      PositionX = x;
+      PositionY = y;
     }
+
+    public int PositionX { get; private set; }
+    public int PositionY { get; private set; }
+    public string Name { get; private set; }
+    public char Symbol { get; private set; }
   }
 
-  class Drower
+  class Drawer
   {
-    public void Drow(Player player)
+    public void Draw(Player player)
     {
-      Console.SetCursorPosition(player.Y, player.X);
+      Console.SetCursorPosition(player.PositionY, player.PositionX);
       Console.WriteLine(player.Symbol);
     }
   }
