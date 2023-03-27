@@ -13,30 +13,30 @@ namespace L5_5
 
     private static void ConcatToUniqArray(string[] array1, string[] array2)
     {
-      Dictionary<string, string> uniqArray = new Dictionary<string, string>();
+      List<string> uniqArray = new List<string>();
       AddArray(array1, uniqArray);
       AddArray(array2, uniqArray);
       ShowArray(uniqArray);
     }
 
-    private static void AddArray(string[] array, Dictionary<string, string> dictionary)
+    private static void AddArray(string[] array, List<string> list)
     {
       for (int i = 0; i < array.Length; i++)
       {
-        if (!dictionary.ContainsKey(array[i]))
+        if (list.Contains(array[i]) == false)
         {
-          dictionary.Add(array[i], array[i]);
+          list.Add(array[i]);
         }
       }
     }
 
-    private static void ShowArray(Dictionary<string, string> dictionary)
+    private static void ShowArray(List<string> array)
     {
       Console.Write("[ ");
 
-      foreach (var el in dictionary)
+      foreach (string value in array)
       {
-        Console.Write($"{el.Value} ");
+        Console.Write($"{value} ");
       }
 
       Console.Write("]");
