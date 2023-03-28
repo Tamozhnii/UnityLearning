@@ -25,12 +25,12 @@ namespace L6_1
       PositionY = 5;
     }
 
-    public Player(string name, char symbol, int x, int y)
+    public Player(string name, char symbol, int positionX, int positionY)
     {
       Name = name;
       Symbol = symbol;
-      PositionX = x;
-      PositionY = y;
+      PositionX = positionX;
+      PositionY = positionY;
     }
 
     public int PositionX { get; private set; }
