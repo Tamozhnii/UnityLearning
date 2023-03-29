@@ -14,7 +14,7 @@ namespace L6_3
       const string CommandExit = "6";
 
       bool isWork = true;
-      DataBase database = new DataBase();
+      Database database = new Database();
 
       while (isWork)
       {
@@ -31,24 +31,23 @@ namespace L6_3
         switch (userCommand)
         {
           case CommandAddPlayer:
-            AddNewPlayer(database);
+            database.AddNewPlayer();
             break;
 
           case CommandShowAllPlayer:
             database.ShowAllPlayers();
-            Console.ReadKey();
             break;
 
           case CommandBanPlayer:
-            BanPlayer(database);
+            database.BanPlayer();
             break;
 
           case CommandUnbanPlayer:
-            UnbanPlayer(database);
+            database.UnbanPlayer();
             break;
 
           case CommandDeletePlayer:
-            DeletePlayer(database);
+            database.DeletePlayer();
             break;
 
           case CommandExit:
@@ -60,170 +59,168 @@ namespace L6_3
             break;
         }
 
+        Console.ReadKey();
         Console.Clear();
       }
     }
 
-    private static void AddNewPlayer(DataBase dataBase)
+    class Player
     {
-      Console.Write("Введите ник: ");
-      string nickName = Console.ReadLine();
-      Console.Write("Введите уровень персонажа: ");
-      int playerLevel = Convert.ToInt32(Console.ReadLine());
-      dataBase.AddNewPlayer(nickName, playerLevel);
-      Console.ReadKey();
-    }
-
-    private static void BanPlayer(DataBase dataBase)
-    {
-      Console.Write("Введите id персонажа, которого хотите забанить: ");
-      string playerId = Console.ReadLine();
-      int id = 0;
-
-      if (int.TryParse(playerId, out id))
+      public Player(string nickName, int level, bool isBan)
       {
-        dataBase.BanPlayer(id);
-      }
-    }
+        NickName = nickName;
+        IsBan = isBan;
 
-    private static void UnbanPlayer(DataBase dataBase)
-    {
-      Console.Write("Введите id персонажа, которого хотите разбанить: ");
-      string playerId = Console.ReadLine();
-      int id = 0;
-
-      if (int.TryParse(playerId, out id))
-      {
-        dataBase.UnbanPlayer(id);
-      }
-    }
-
-    private static void DeletePlayer(DataBase dataBase)
-    {
-      Console.Write("Введите id персонажа, которого хотите удалить: ");
-      string playerId = Console.ReadLine();
-      int id = 0;
-
-      if (int.TryParse(playerId, out id))
-      {
-        dataBase.DeletePlayer(id);
-      }
-    }
-  }
-
-  class Player
-  {
-    public Player(string nickName, int level, bool isBan)
-    {
-      NickName = nickName;
-      IsBan = isBan;
-
-      if (level < 0)
-      {
-        Level = 0;
-      }
-      else
-      {
-        Level = level;
-      }
-    }
-
-    public string NickName { get; private set; }
-    public int Level { get; private set; }
-    public bool IsBan { get; private set; }
-
-    public void Ban()
-    {
-      IsBan = true;
-    }
-
-    public void Unban()
-    {
-      IsBan = false;
-    }
-
-    public override string ToString()
-    {
-      string activityStatus;
-
-      if (IsBan)
-      {
-        activityStatus = "Пользователь заблокирован";
-      }
-      else
-      {
-        activityStatus = "Пользователь активен";
-      }
-
-      return $"{NickName} - уровень: {Level}. {activityStatus}";
-    }
-  }
-
-  class DataBase
-  {
-    private Dictionary<int, Player> _players;
-    private int _counter;
-
-    public DataBase()
-    {
-      _players = new Dictionary<int, Player>();
-      _counter = 0;
-    }
-
-    public void AddNewPlayer(string nickName, int level)
-    {
-      bool isValid = true;
-
-      foreach (var player in _players)
-      {
-        if (player.Value.NickName == nickName)
+        if (level < 0)
         {
-          isValid = false;
+          Level = 0;
+        }
+        else
+        {
+          Level = level;
         }
       }
 
-      if (isValid)
+      public string NickName { get; private set; }
+      public int Level { get; private set; }
+      public bool IsBan { get; private set; }
+
+      public void Ban()
       {
-        Player player = new Player(nickName, level, false);
-        _players.Add(_counter, player);
-        _counter++;
-        Console.WriteLine("Пользователь успешно добавлен");
+        IsBan = true;
       }
-      else
+
+      public void Unban()
       {
-        Console.WriteLine("Пользователь с таким ником уже существует");
+        IsBan = false;
+      }
+
+      public override string ToString()
+      {
+        string activityStatus;
+
+        if (IsBan)
+        {
+          activityStatus = "Пользователь заблокирован";
+        }
+        else
+        {
+          activityStatus = "Пользователь активен";
+        }
+
+        return $"{NickName} - уровень: {Level}. {activityStatus}";
       }
     }
 
-    public void BanPlayer(int id)
+    class Database
     {
-      if (_players.ContainsKey(id))
-      {
-        _players[id].Ban();
-      }
-    }
+      private Dictionary<int, Player> _players;
+      private int _counter;
 
-    public void UnbanPlayer(int id)
-    {
-      if (_players.ContainsKey(id))
+      public Database()
       {
-        _players[id].Unban();
+        _players = new Dictionary<int, Player>();
+        _counter = 0;
       }
-    }
 
-    public void DeletePlayer(int id)
-    {
-      if (_players.ContainsKey(id))
+      public void AddNewPlayer()
       {
-        _players.Remove(id);
+        Console.Write("Введите ник: ");
+        string nickName = Console.ReadLine();
+        Console.Write("Введите уровень персонажа: ");
+        int playerLevel = Convert.ToInt32(Console.ReadLine());
+        bool isValid = true;
+
+        foreach (var player in _players)
+        {
+          if (player.Value.NickName == nickName)
+          {
+            isValid = false;
+          }
+        }
+
+        if (isValid)
+        {
+          Player player = new Player(nickName, playerLevel, false);
+          _players.Add(_counter, player);
+          _counter++;
+          Console.WriteLine("Пользователь успешно добавлен");
+        }
+        else
+        {
+          Console.WriteLine("Пользователь с таким ником уже существует");
+        }
       }
-    }
 
-    public void ShowAllPlayers()
-    {
-      foreach (var player in _players)
+      public void BanPlayer()
       {
-        Console.WriteLine($"{player.Key}. {player.Value.ToString()}");
+        Player player;
+        Console.Write("Введите id персонажа, которого хотите забанить: ");
+        bool isIncludes = this.TryGetPlayer(out player);
+
+        if (isIncludes)
+        {
+          player.Ban();
+        }
+      }
+
+      public void UnbanPlayer()
+      {
+        Player player;
+        Console.Write("Введите id персонажа, которого хотите разбанить: ");
+        bool isIncludes = this.TryGetPlayer(out player);
+
+        if (isIncludes)
+        {
+          player.Unban();
+        }
+      }
+
+      public void DeletePlayer()
+      {
+        int playerId;
+        Console.Write("Введите id персонажа, которого хотите удалить: ");
+        bool isIncludes = this.TryGetPlayer(out playerId);
+
+        if (isIncludes)
+        {
+          _players.Remove(playerId);
+        }
+      }
+
+      public void ShowAllPlayers()
+      {
+        foreach (var player in _players)
+        {
+          Console.WriteLine($"{player.Key}. {player.Value.ToString()}");
+        }
+      }
+
+      private bool TryGetPlayer(out int id)
+      {
+        string playerId = Console.ReadLine();
+        int.TryParse(playerId, out id);
+        return _players.ContainsKey(id);
+      }
+
+      private bool TryGetPlayer(out Player player)
+      {
+        int id;
+        string playerId = Console.ReadLine();
+        int.TryParse(playerId, out id);
+
+        bool isFindPlayer = _players.ContainsKey(id);
+
+        if (isFindPlayer)
+        {
+          player = _players[id];
+        }
+        else
+        {
+          player = null;
+        }
+
+        return isFindPlayer;
       }
     }
   }
