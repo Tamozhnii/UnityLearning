@@ -70,15 +70,7 @@ namespace L6_3
       {
         NickName = nickName;
         IsBan = isBan;
-
-        if (level < 0)
-        {
-          Level = 0;
-        }
-        else
-        {
-          Level = level;
-        }
+        Level = level;
       }
 
       public string NickName { get; private set; }
@@ -125,38 +117,44 @@ namespace L6_3
 
       public void AddNewPlayer()
       {
+        int level;
+        bool isValidLevel = true;
+        bool isValidNickName = true;
         Console.Write("Введите ник: ");
         string nickName = Console.ReadLine();
         Console.Write("Введите уровень персонажа: ");
-        int playerLevel = Convert.ToInt32(Console.ReadLine());
-        bool isValid = true;
+        string playerLevel = Console.ReadLine();
+        isValidLevel = int.TryParse(playerLevel, out level);
 
         foreach (var player in _players)
         {
           if (player.Value.NickName == nickName)
           {
-            isValid = false;
+            isValidNickName = false;
           }
         }
 
-        if (isValid)
+        if (isValidNickName == false)
         {
-          Player player = new Player(nickName, playerLevel, false);
+          Console.WriteLine("Пользователь с таким ником уже существует");
+        }
+        else if (isValidLevel == false || level < 0)
+        {
+          Console.WriteLine("Вы ввели некорректный уровень");
+        }
+        else if (isValidNickName && isValidLevel)
+        {
+          Player player = new Player(nickName, level, false);
           _players.Add(_counter, player);
           _counter++;
           Console.WriteLine("Пользователь успешно добавлен");
-        }
-        else
-        {
-          Console.WriteLine("Пользователь с таким ником уже существует");
         }
       }
 
       public void BanPlayer()
       {
-        Player player;
         Console.Write("Введите id персонажа, которого хотите забанить: ");
-        bool isIncludes = this.TryGetPlayer(out player);
+        bool isIncludes = TryGetPlayer(out int playerId, out Player player);
 
         if (isIncludes)
         {
@@ -166,9 +164,8 @@ namespace L6_3
 
       public void UnbanPlayer()
       {
-        Player player;
         Console.Write("Введите id персонажа, которого хотите разбанить: ");
-        bool isIncludes = this.TryGetPlayer(out player);
+        bool isIncludes = TryGetPlayer(out int playerId, out Player player);
 
         if (isIncludes)
         {
@@ -178,9 +175,8 @@ namespace L6_3
 
       public void DeletePlayer()
       {
-        int playerId;
         Console.Write("Введите id персонажа, которого хотите удалить: ");
-        bool isIncludes = this.TryGetPlayer(out playerId);
+        bool isIncludes = TryGetPlayer(out int playerId, out Player player);
 
         if (isIncludes)
         {
@@ -196,16 +192,8 @@ namespace L6_3
         }
       }
 
-      private bool TryGetPlayer(out int id)
+      private bool TryGetPlayer(out int id, out Player player)
       {
-        string playerId = Console.ReadLine();
-        int.TryParse(playerId, out id);
-        return _players.ContainsKey(id);
-      }
-
-      private bool TryGetPlayer(out Player player)
-      {
-        int id;
         string playerId = Console.ReadLine();
         int.TryParse(playerId, out id);
 
