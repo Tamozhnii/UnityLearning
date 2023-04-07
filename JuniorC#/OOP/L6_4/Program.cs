@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
 
-namespace L6_3
+namespace L6_4
 {
   class Program
   {
@@ -16,18 +15,7 @@ namespace L6_3
       if (isValid && playersCount > 0 && playersCount <= maxPlayersCount)
       {
         Table table = new Table(playersCount);
-
-        for (int i = 0; i < playersCount; i++)
-        {
-          if (table.CheckDeckCount())
-          {
-            table.ToPlay(i);
-          }
-          else
-          {
-            break;
-          }
-        }
+        table.Play();
       }
       else
       {
@@ -38,36 +26,43 @@ namespace L6_3
 
   class Card
   {
-    private string _nominal;
-    private string _suit;
+    private string _cardValue;
+    private string _cardSuit;
 
-    public Card(string nominal, string suit)
+    public Card(string cardValue, string cardSuit)
     {
-      _nominal = nominal;
-      _suit = suit;
+      _cardValue = cardValue;
+      _cardSuit = cardSuit;
     }
 
     public override string ToString()
     {
-      return $"{_nominal} of {_suit}";
+      return $"{_cardValue} of {_cardSuit}";
     }
   }
 
   class Deck
   {
-    private string[] nominals = new string[9] { "Six", "Seven", "Eight", "Nine", "Ten", "Jacks", "Queen", "King", "Ace" };
-    private string[] suits = new string[4] { "Spades", "Clubs", "Diamonds", "Hearts" };
-    private List<Card> _decks;
+    private List<Card> _cards;
 
     public Deck()
     {
-      _decks = new List<Card>();
+      _cards = new List<Card>();
+      Initialize();
+    }
 
-      for (int i = 0; i < suits.Length; i++)
+    public int CardsCount => _cards.Count;
+
+    private void Initialize()
+    {
+      string[] cardValues = { "Six", "Seven", "Eight", "Nine", "Ten", "Jacks", "Queen", "King", "Ace" };
+      string[] cardSuits = { "Spades", "Clubs", "Diamonds", "Hearts" };
+
+      for (int i = 0; i < cardSuits.Length; i++)
       {
-        for (int j = 0; j < nominals.Length; j++)
+        for (int j = 0; j < cardValues.Length; j++)
         {
-          _decks.Add(new Card(nominals[j], suits[i]));
+          _cards.Add(new Card(cardValues[j], cardSuits[i]));
         }
       }
     }
@@ -75,15 +70,10 @@ namespace L6_3
     public Card GetCard()
     {
       Random random = new Random();
-      int index = random.Next(0, _decks.Count);
-      Card card = _decks[index];
-      _decks.RemoveAt(index);
+      int index = random.Next(0, _cards.Count);
+      Card card = _cards[index];
+      _cards.Remove(card);
       return card;
-    }
-
-    public int GetRemainigCardsCount()
-    {
-      return _decks.Count;
     }
   }
 
@@ -130,55 +120,66 @@ namespace L6_3
     {
       _deck = new Deck();
       _players = new List<Player>();
-      _maxCardsForPlayer = _deck.GetRemainigCardsCount() / playersCount;
+      _maxCardsForPlayer = _deck.CardsCount / playersCount;
+      JoiningPlayers(playersCount);
+    }
 
+    public bool CheckDeckCount => _deck.CardsCount > 0;
+
+    private void JoiningPlayers(int playersCount)
+    {
       for (int i = 0; i < playersCount; i++)
       {
         _players.Add(new Player());
       }
     }
 
-    const string CommandTakeCard = "1";
-    const string CommandFinish = "2";
-
-    public bool CheckDeckCount()
+    public void Play()
     {
-      return _deck.GetRemainigCardsCount() > 0;
-    }
+      const string CommandTakeCard = "1";
+      const string CommandFinish = "2";
 
-    public void ToPlay(int playerIndex)
-    {
-      Console.WriteLine($"\nХод игрока - {playerIndex}");
-      Player player = _players[playerIndex];
-      bool isTakingCards = true;
-
-      while (isTakingCards)
+      for (int i = 0; i < _players.Count; i++)
       {
-        player.ShowHand();
-        Console.WriteLine($"{CommandTakeCard} - взять карту; {CommandFinish} - закончить");
-        Console.Write("Введите команду: ");
-        string playerInput = Console.ReadLine();
+        Console.WriteLine($"\nХод игрока - {i}");
+        Player player = _players[i];
+        bool isTakingCards = true;
 
-        switch (playerInput)
+        if (CheckDeckCount)
         {
-          case CommandTakeCard:
-            isTakingCards = ToCardIssuance(player);
-            break;
+          while (isTakingCards)
+          {
+            player.ShowHand();
+            Console.WriteLine($"{CommandTakeCard} - взять карту; {CommandFinish} - закончить");
+            Console.Write("Введите команду: ");
+            string playerInput = Console.ReadLine();
 
-          case CommandFinish:
-            isTakingCards = false;
-            break;
+            switch (playerInput)
+            {
+              case CommandTakeCard:
+                isTakingCards = ToCardIssuance(player);
+                break;
 
-          default:
-            Console.WriteLine("Введите корректную команду");
-            break;
+              case CommandFinish:
+                isTakingCards = false;
+                break;
+
+              default:
+                Console.WriteLine("Введите корректную команду");
+                break;
+            }
+          }
+        }
+        else
+        {
+          break;
         }
       }
     }
 
     private bool ToCardIssuance(Player player)
     {
-      int remainingCards = _deck.GetRemainigCardsCount();
+      int remainingCards = _deck.CardsCount;
       bool isEnough = player.GetHandCount() < _maxCardsForPlayer;
 
       if (isEnough)
