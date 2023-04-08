@@ -1,5 +1,4 @@
-﻿using Internal;
-using System;
+﻿using System;
 
 namespace L6_5
 {
@@ -48,19 +47,19 @@ namespace L6_5
             break;
 
           case CommandFindBooksByName:
-            repository.FindBookByName();
+            repository.ShowBooksByName();
             break;
 
           case CommandFindBooksByAuthor:
-            repository.FindBookByAuthor();
+            repository.ShowBooksByAuthor();
             break;
 
           case CommandFindBooksByYear:
-            repository.FindBookByYear();
+            repository.ShowBooksByYear();
             break;
 
           case CommandFindBooksByGenre:
-            repository.FindBookByGenre();
+            repository.ShowBooksByGenre();
             break;
 
           case CommandExit:
@@ -77,7 +76,7 @@ namespace L6_5
 
   class Book
   {
-    public Book(string name, string author, string yearIssue, string genre)
+    public Book(string name, string author, int yearIssue, string genre)
     {
       Name = name;
       Author = author;
@@ -87,7 +86,7 @@ namespace L6_5
 
     public string Name { get; private set; }
     public string Author { get; private set; }
-    public string YearIssue { get; private set; }
+    public int YearIssue { get; private set; }
     public string Genre { get; private set; }
 
     public override string ToString()
@@ -107,44 +106,54 @@ namespace L6_5
 
     public void Initialize()
     {
-      _books.Add(new Book("Зелёная миля", "Стивен Кинг", "1996", "фэнтезийная драма"));
-      _books.Add(new Book("Оно", "Стивен Кинг", "1986", "ужасы"));
-      _books.Add(new Book("Мгла", "Стивен Кинг", "1980", "ужасы"));
-      _books.Add(new Book("Сияние", "Стивен Кинг", "1977", "ужасы"));
-      _books.Add(new Book("Рита Хейуорт и спасение из Шоушенка", "Стивен Кинг", "1982", "драма"));
-      _books.Add(new Book("Этюд в багровых тонах", "Артур Конан Дойл", "1887", "детектив"));
-      _books.Add(new Book("Знак четырёх", "Артур Конан Дойл", "1890", "детектив"));
-      _books.Add(new Book("Собака Баскервилей", "Артур Конан Дойл", "1901", "детектив"));
+      _books.Add(new Book("Зелёная миля", "Стивен Кинг", 1996, "фэнтезийная драма"));
+      _books.Add(new Book("Оно", "Стивен Кинг", 1986, "ужасы"));
+      _books.Add(new Book("Мгла", "Стивен Кинг", 1980, "ужасы"));
+      _books.Add(new Book("Сияние", "Стивен Кинг", 1977, "ужасы"));
+      _books.Add(new Book("Рита Хейуорт и спасение из Шоушенка", "Стивен Кинг", 1982, "драма"));
+      _books.Add(new Book("Этюд в багровых тонах", "Артур Конан Дойл", 1887, "детектив"));
+      _books.Add(new Book("Знак четырёх", "Артур Конан Дойл", 1890, "детектив"));
+      _books.Add(new Book("Собака Баскервилей", "Артур Конан Дойл", 1901, "детектив"));
     }
 
     public void AddBook()
     {
+      int yearIssue = 0;
       Console.Write("Введите название книги: ");
       string name = Console.ReadLine();
       Console.Write("Введите автора: ");
       string author = Console.ReadLine();
       Console.Write("Введите год: ");
-      string yearIssue = Console.ReadLine();
+      string userYearIssue = Console.ReadLine();
       Console.Write("Введите жанр книги: ");
       string genre = Console.ReadLine();
-      _books.Add(new Book(name, author, yearIssue, genre));
-      Console.WriteLine("Книга добавлена\n");
+      bool isValid = name.Trim().Length > 0 && author.Trim().Length > 0 && genre.Trim().Length > 0 && int.TryParse(userYearIssue, out yearIssue);
+
+      if (isValid)
+      {
+        _books.Add(new Book(name, author, yearIssue, genre));
+        Console.WriteLine("Книга добавлена\n");
+      }
+      else
+      {
+        Console.WriteLine("Введите корректные данные\n");
+      }
     }
 
     public void RemoveBook()
     {
-      Console.Write("Укажите id книги которую хотите удалить: ");
-      string bookId = Console.ReadLine();
-      bool isValid = int.TryParse(bookId, out int id);
+      Console.Write("Укажите полное название книги которую хотите удалить: ");
+      string bookName = Console.ReadLine();
+      var book = _books.Find(book => book.Name == bookName);
 
-      if (isValid)
+      if (book != null)
       {
-        _books.RemoveAt(id);
-        Console.WriteLine("Операция прошла успешно\n");
+        _books.Remove(book);
+        Console.WriteLine("Книга успешно удалена\n");
       }
       else
       {
-        Console.WriteLine("Неверные данные\n");
+        Console.WriteLine("Такой книги не существует\n");
       }
     }
 
@@ -158,32 +167,42 @@ namespace L6_5
       Console.WriteLine();
     }
 
-    public void FindBookByName()
+    public void ShowBooksByName()
     {
       Console.Write("Введите название книги: ");
-      string name = Console.ReadLine();
-      ShowBooks(_books.FindAll(b => b.Name == name));
+      string name = Console.ReadLine().ToLower();
+      ShowBooks(_books.FindAll(book => book.Name.ToLower().Contains(name)));
     }
 
-    public void FindBookByAuthor()
+    public void ShowBooksByAuthor()
     {
       Console.Write("Введите автора: ");
-      string author = Console.ReadLine();
-      ShowBooks(_books.FindAll(b => b.Author == author));
+      string author = Console.ReadLine().ToLower();
+      ShowBooks(_books.FindAll(book => book.Author.ToLower().Contains(author)));
     }
 
-    public void FindBookByYear()
+    public void ShowBooksByYear()
     {
+      int yearIssue = 0;
       Console.Write("Введите год: ");
-      string yearIssue = Console.ReadLine();
-      ShowBooks(_books.FindAll(b => b.YearIssue == yearIssue));
+      string userYearIssue = Console.ReadLine();
+      bool isValid = int.TryParse(userYearIssue, out yearIssue);
+
+      if (isValid)
+      {
+        ShowBooks(_books.FindAll(book => book.YearIssue == yearIssue));
+      }
+      else
+      {
+        Console.WriteLine("Невалидные данные");
+      }
     }
 
-    public void FindBookByGenre()
+    public void ShowBooksByGenre()
     {
       Console.Write("Введите жанр: ");
-      string genre = Console.ReadLine();
-      ShowBooks(_books.FindAll(b => b.Genre == genre));
+      string genre = Console.ReadLine().ToLower();
+      ShowBooks(_books.FindAll(book => book.Genre.ToLower() = genre));
     }
 
     private void ShowBooks(List<Book> books)
