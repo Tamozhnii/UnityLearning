@@ -26,18 +26,18 @@ namespace L6_4
 
   class Card
   {
-    private string _cardValue;
-    private string _cardSuit;
+    private string _value;
+    private string _suit;
 
-    public Card(string cardValue, string cardSuit)
+    public Card(string value, string suit)
     {
-      _cardValue = cardValue;
-      _cardSuit = cardSuit;
+      _value = value;
+      _suit = suit;
     }
 
     public override string ToString()
     {
-      return $"{_cardValue} of {_cardSuit}";
+      return $"{_value} of {_suit}";
     }
   }
 
@@ -45,15 +45,24 @@ namespace L6_4
   {
     private List<Card> _cards;
 
+    public int CardsCount => _cards.Count;
+
     public Deck()
     {
       _cards = new List<Card>();
-      Initialize();
+      Create();
     }
 
-    public int CardsCount => _cards.Count;
+    public Card GetCard()
+    {
+      Random random = new Random();
+      int index = random.Next(0, _cards.Count);
+      Card card = _cards[index];
+      _cards.Remove(card);
+      return card;
+    }
 
-    private void Initialize()
+    private void Create()
     {
       string[] cardValues = { "Six", "Seven", "Eight", "Nine", "Ten", "Jacks", "Queen", "King", "Ace" };
       string[] cardSuits = { "Spades", "Clubs", "Diamonds", "Hearts" };
@@ -65,15 +74,6 @@ namespace L6_4
           _cards.Add(new Card(cardValues[j], cardSuits[i]));
         }
       }
-    }
-
-    public Card GetCard()
-    {
-      Random random = new Random();
-      int index = random.Next(0, _cards.Count);
-      Card card = _cards[index];
-      _cards.Remove(card);
-      return card;
     }
   }
 
@@ -124,16 +124,6 @@ namespace L6_4
       JoiningPlayers(playersCount);
     }
 
-    public bool CheckDeckCount => _deck.CardsCount > 0;
-
-    private void JoiningPlayers(int playersCount)
-    {
-      for (int i = 0; i < playersCount; i++)
-      {
-        _players.Add(new Player());
-      }
-    }
-
     public void Play()
     {
       const string CommandTakeCard = "1";
@@ -145,7 +135,7 @@ namespace L6_4
         Player player = _players[i];
         bool isTakingCards = true;
 
-        if (CheckDeckCount)
+        if (_deck.CardsCount > 0)
         {
           while (isTakingCards)
           {
@@ -157,7 +147,7 @@ namespace L6_4
             switch (playerInput)
             {
               case CommandTakeCard:
-                isTakingCards = ToCardIssuance(player);
+                isTakingCards = GiveCard(player);
                 break;
 
               case CommandFinish:
@@ -172,14 +162,22 @@ namespace L6_4
         }
         else
         {
+          Console.WriteLine("Карты в колоде закончились");
           break;
         }
       }
     }
 
-    private bool ToCardIssuance(Player player)
+    private void JoiningPlayers(int playersCount)
     {
-      int remainingCards = _deck.CardsCount;
+      for (int i = 0; i < playersCount; i++)
+      {
+        _players.Add(new Player());
+      }
+    }
+
+    private bool GiveCard(Player player)
+    {
       bool isEnough = player.GetHandCount() < _maxCardsForPlayer;
 
       if (isEnough)
