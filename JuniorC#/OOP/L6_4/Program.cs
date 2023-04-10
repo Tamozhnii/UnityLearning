@@ -37,7 +37,7 @@ namespace L6_4
 
     public override string ToString()
     {
-      return $"{_value} of {_suit}";
+      return $"{_value}{_suit}";
     }
   }
 
@@ -45,27 +45,19 @@ namespace L6_4
   {
     private List<Card> _cards;
 
-    public int CardsCount => _cards.Count;
-
     public Deck()
     {
       _cards = new List<Card>();
       Create();
+      Shuffle();
     }
 
-    public Card GetCard()
-    {
-      Random random = new Random();
-      int index = random.Next(0, _cards.Count);
-      Card card = _cards[index];
-      _cards.Remove(card);
-      return card;
-    }
+    public int CardsCount => _cards.Count;
 
     private void Create()
     {
-      string[] cardValues = { "Six", "Seven", "Eight", "Nine", "Ten", "Jacks", "Queen", "King", "Ace" };
-      string[] cardSuits = { "Spades", "Clubs", "Diamonds", "Hearts" };
+      string[] cardValues = { "6", "7", "8", "9", "10", "J", "Q", "K", "A" };
+      string[] cardSuits = { "♠", "♣", "♦", "♥" };
 
       for (int i = 0; i < cardSuits.Length; i++)
       {
@@ -74,6 +66,28 @@ namespace L6_4
           _cards.Add(new Card(cardValues[j], cardSuits[i]));
         }
       }
+    }
+
+    private void Shuffle()
+    {
+      Random random = new Random();
+
+      for (int i = 0; i < _cards.Count; i++)
+      {
+        int firstIndex = random.Next(0, _cards.Count - 1);
+        int secondIndex = random.Next(firstIndex, _cards.Count);
+        int count = secondIndex - firstIndex;
+        List<Card> cards = _cards.GetRange(firstIndex, count);
+        _cards.RemoveRange(firstIndex, count);
+        _cards.AddRange(cards);
+      }
+    }
+
+    public Card GetCard()
+    {
+      Card card = _cards.Last();
+      _cards.Remove(card);
+      return card;
     }
   }
 
@@ -86,14 +100,14 @@ namespace L6_4
       _hand = new List<Card>();
     }
 
+    public int HandCount => _hand.Count;
+
     public void TakeCard(Card card)
     {
-      _hand.Add(card);
-    }
-
-    public int GetHandCount()
-    {
-      return _hand.Count;
+      if (card != null)
+      {
+        _hand.Add(card);
+      }
     }
 
     public void ShowHand()
@@ -102,7 +116,7 @@ namespace L6_4
 
       foreach (Card card in _hand)
       {
-        Console.Write($"|{card}| ");
+        Console.Write($"{card} ");
       }
 
       Console.Write($"]\n");
@@ -178,7 +192,7 @@ namespace L6_4
 
     private bool GiveCard(Player player)
     {
-      bool isEnough = player.GetHandCount() < _maxCardsForPlayer;
+      bool isEnough = player.HandCount < _maxCardsForPlayer;
 
       if (isEnough)
       {
