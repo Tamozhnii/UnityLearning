@@ -54,6 +54,13 @@ namespace L6_4
 
     public int CardsCount => _cards.Count;
 
+    public Card GetCard()
+    {
+      Card card = _cards.Last();
+      _cards.Remove(card);
+      return card;
+    }
+
     private void Create()
     {
       string[] cardValues = { "6", "7", "8", "9", "10", "J", "Q", "K", "A" };
@@ -74,20 +81,12 @@ namespace L6_4
 
       for (int i = 0; i < _cards.Count; i++)
       {
-        int firstIndex = random.Next(0, _cards.Count - 1);
-        int secondIndex = random.Next(firstIndex, _cards.Count);
-        int count = secondIndex - firstIndex;
-        List<Card> cards = _cards.GetRange(firstIndex, count);
-        _cards.RemoveRange(firstIndex, count);
-        _cards.AddRange(cards);
+        int firstIndex = random.Next(0, _cards.Count);
+        int secondIndex = random.Next(0, _cards.Count);
+        Card temp = _cards[firstIndex];
+        _cards[firstIndex] = _cards[secondIndex];
+        _cards[secondIndex] = temp;
       }
-    }
-
-    public Card GetCard()
-    {
-      Card card = _cards.Last();
-      _cards.Remove(card);
-      return card;
     }
   }
 
@@ -121,7 +120,6 @@ namespace L6_4
 
       Console.Write($"]\n");
     }
-
   }
 
   class Table
