@@ -103,12 +103,6 @@ namespace L6_6
 
   class Store
   {
-    private const string CommandShowProducts = "1";
-    private const string CommandBuyProduct = "2";
-    private const string CommandShowMoney = "3";
-    private const string CommandShowBasket = "4";
-    private const string CommandExit = "5";
-
     private bool _isInStore;
     private Player _player;
     private Seller _seller;
@@ -120,52 +114,14 @@ namespace L6_6
       AcceptanceOfProducts();
     }
 
-    private void AcceptanceOfProducts()
-    {
-      _seller.AddProduct(new Product("Хлеб", 1));
-      _seller.AddProduct(new Product("Молоко", 2));
-      _seller.AddProduct(new Product("Мясо", 5));
-      _seller.AddProduct(new Product("Икра", 25));
-      _seller.AddProduct(new Product("Билет на Луну", 2147483647));
-    }
-
-    private void ToBuy()
-    {
-      int minNameLenght = 3;
-      Product? product = null;
-      Console.WriteLine("Какой товар желаете приобрести?");
-      string userInput = Console.ReadLine();
-
-      if (userInput.Trim().Length < minNameLenght)
-      {
-        Console.WriteLine("Введите корректное название продукта");
-      }
-      else
-      {
-        product = _seller.FindProduct(userInput);
-
-        if (product == null)
-        {
-          Console.WriteLine("Такого товара нет");
-        }
-        else
-        {
-          if (_player.Money < product.Price)
-          {
-            Console.WriteLine("У вас не хватает средств");
-          }
-          else
-          {
-            _seller.SellProduct(product);
-            _player.BuyProduct(product);
-            Console.WriteLine("Спасибо за покупку");
-          }
-        }
-      }
-    }
-
     public void ToShop()
     {
+      const string CommandShowProducts = "1";
+      const string CommandBuyProduct = "2";
+      const string CommandShowMoney = "3";
+      const string CommandShowBasket = "4";
+      const string CommandExit = "5";
+
       while (_isInStore)
       {
         if (_player == null)
@@ -228,5 +184,48 @@ namespace L6_6
       }
     }
 
+    private void AcceptanceOfProducts()
+    {
+      _seller.AddProduct(new Product("Хлеб", 1));
+      _seller.AddProduct(new Product("Молоко", 2));
+      _seller.AddProduct(new Product("Мясо", 5));
+      _seller.AddProduct(new Product("Икра", 25));
+      _seller.AddProduct(new Product("Билет на Луну", 2147483647));
+    }
+
+    private void ToBuy()
+    {
+      int minNameLenght = 3;
+      Product? product = null;
+      Console.WriteLine("Какой товар желаете приобрести?");
+      string userInput = Console.ReadLine();
+
+      if (userInput.Trim().Length < minNameLenght)
+      {
+        Console.WriteLine("Введите корректное название продукта");
+      }
+      else
+      {
+        product = _seller.FindProduct(userInput);
+
+        if (product == null)
+        {
+          Console.WriteLine("Такого товара нет");
+        }
+        else
+        {
+          if (_player.Money < product.Price)
+          {
+            Console.WriteLine("У вас не хватает средств");
+          }
+          else
+          {
+            _seller.SellProduct(product);
+            _player.BuyProduct(product);
+            Console.WriteLine("Спасибо за покупку");
+          }
+        }
+      }
+    }
   }
 }
