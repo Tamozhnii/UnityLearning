@@ -7,7 +7,7 @@ namespace L6_6
     static void Main(string[] args)
     {
       Store store = new Store();
-      store.ToShop();
+      store.Open();
     }
   }
 
@@ -24,34 +24,35 @@ namespace L6_6
 
     public string Name => _name;
     public int Price => _price;
+  }
 
-    public override string ToString()
+  class Participant
+  {
+    public int Money { get; set; }
+    public List<Product> Products { get; set; }
+
+    public Participant()
     {
-      return $"{_name} - {_price}$";
+      Products = new List<Product>();
+      Money = 0;
     }
   }
 
-  class Player
+  class Buyer : Participant
   {
-    private int _money;
-    private List<Product> _basket;
-
-    public Player(int money)
+    public Buyer(int money) : base()
     {
-      _basket = new List<Product>();
-      _money = money;
+      Money = money;
     }
-
-    public int Money => _money;
 
     public void ShowMoney()
     {
-      Console.WriteLine($"{_money}$");
+      Console.WriteLine($"{Money}$");
     }
 
     public void ShowBasket()
     {
-      foreach (var product in _basket)
+      foreach (var product in Products)
       {
         Console.WriteLine(product.Name);
       }
@@ -59,62 +60,58 @@ namespace L6_6
 
     public void BuyProduct(Product product)
     {
-      _money -= product.Price;
-      _basket.Add(product);
+      Money -= product.Price;
+      Products.Add(product);
+    }
+
+    public bool CheckIsCanPay(int price)
+    {
+      return price <= Money;
     }
   }
 
-  class Seller
+  class Seller : Participant
   {
-    private List<Product> _assortment;
-    private int _cashRegister;
-
-    public Seller()
-    {
-      _assortment = new List<Product>();
-      _cashRegister = 0;
-    }
-
     public void ShowAssortiment()
     {
-      foreach (Product product in _assortment)
+      foreach (Product product in Products)
       {
-        Console.WriteLine(product.ToString());
+        Console.WriteLine($"{product.Name} - {product.Price}$");
       }
     }
 
-    public Product? FindProduct(string name)
+    public Product? TryGetProduct(string name)
     {
-      var product = _assortment.Find(product => product.Name.ToLower().Contains(name.ToLower()));
+      var product = Products.Find(product => product.Name.ToLower().Contains(name.ToLower()));
       return product;
     }
 
     public void SellProduct(Product product)
     {
-      _assortment.Remove(product);
-      _cashRegister += product.Price;
+      Products.Remove(product);
+      Money += product.Price;
     }
 
     public void AddProduct(Product product)
     {
-      _assortment.Add(product);
+      Products.Add(product);
     }
   }
 
   class Store
   {
-    private bool _isInStore;
-    private Player _player;
+    private bool _isOpen;
+    private Buyer _bayer;
     private Seller _seller;
 
     public Store()
     {
-      _isInStore = true;
+      _isOpen = true;
       _seller = new Seller();
       AcceptanceOfProducts();
     }
 
-    public void ToShop()
+    public void Open()
     {
       const string CommandShowProducts = "1";
       const string CommandBuyProduct = "2";
@@ -122,9 +119,9 @@ namespace L6_6
       const string CommandShowBasket = "4";
       const string CommandExit = "5";
 
-      while (_isInStore)
+      while (_isOpen)
       {
-        if (_player == null)
+        if (_bayer == null)
         {
           int money = 0;
           Console.WriteLine("Сколько у вас денег?");
@@ -132,7 +129,7 @@ namespace L6_6
 
           if (isValid)
           {
-            _player = new Player(money);
+            _bayer = new Buyer(money);
           }
           else
           {
@@ -157,19 +154,19 @@ namespace L6_6
               break;
 
             case CommandBuyProduct:
-              ToBuy();
+              Transfer();
               break;
 
             case CommandShowMoney:
-              _player.ShowMoney();
+              _bayer.ShowMoney();
               break;
 
             case CommandShowBasket:
-              _player.ShowBasket();
+              _bayer.ShowBasket();
               break;
 
             case CommandExit:
-              _isInStore = false;
+              _isOpen = false;
               Console.WriteLine("Приходите ещё");
               break;
 
@@ -193,7 +190,7 @@ namespace L6_6
       _seller.AddProduct(new Product("Билет на Луну", 2147483647));
     }
 
-    private void ToBuy()
+    private void Transfer()
     {
       int minNameLenght = 3;
       Product? product = null;
@@ -206,7 +203,7 @@ namespace L6_6
       }
       else
       {
-        product = _seller.FindProduct(userInput);
+        product = _seller.TryGetProduct(userInput);
 
         if (product == null)
         {
@@ -214,15 +211,17 @@ namespace L6_6
         }
         else
         {
-          if (_player.Money < product.Price)
+          bool isEnoughMoney = _bayer.CheckIsCanPay(product.Price);
+
+          if (isEnoughMoney)
           {
-            Console.WriteLine("У вас не хватает средств");
+            _seller.SellProduct(product);
+            _bayer.BuyProduct(product);
+            Console.WriteLine("Спасибо за покупку");
           }
           else
           {
-            _seller.SellProduct(product);
-            _player.BuyProduct(product);
-            Console.WriteLine("Спасибо за покупку");
+            Console.WriteLine("У вас не хватает средств");
           }
         }
       }
