@@ -28,8 +28,8 @@ namespace L6_6
 
   class Participant
   {
-    public int Money { get; set; }
-    public List<Product> Products { get; set; }
+    protected int Money { get; set; }
+    protected List<Product> Products { get; set; }
 
     public Participant()
     {
@@ -64,7 +64,7 @@ namespace L6_6
       Products.Add(product);
     }
 
-    public bool CheckIsCanPay(int price)
+    public bool CanPay(int price)
     {
       return price <= Money;
     }
@@ -211,7 +211,7 @@ namespace L6_6
         }
         else
         {
-          bool isEnoughMoney = _bayer.CheckIsCanPay(product.Price);
+          bool isEnoughMoney = _bayer.CanPay(product.Price);
 
           if (isEnoughMoney)
           {
