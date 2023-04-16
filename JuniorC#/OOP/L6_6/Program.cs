@@ -28,14 +28,16 @@ namespace L6_6
 
   class Participant
   {
-    protected int Money { get; set; }
-    protected List<Product> Products { get; set; }
+    private List<Product> _products;
+    public int Money { get; protected set; }
 
     public Participant()
     {
-      Products = new List<Product>();
+      _products = new List<Product>();
       Money = 0;
     }
+
+    public List<Product> Products => _products;
   }
 
   class Buyer : Participant
