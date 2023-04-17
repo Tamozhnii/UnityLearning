@@ -23,10 +23,10 @@ namespace L6_7
     private void CreateDirection()
     {
       Console.WriteLine("Откуда:");
-      string from = Console.ReadLine();
+      string departurePoint = Console.ReadLine();
       Console.WriteLine("Куда:");
-      string to = Console.ReadLine();
-      TrainDirection trainDirection = new TrainDirection(from, to);
+      string arrivalPoint = Console.ReadLine();
+      TrainDirection trainDirection = new TrainDirection(departurePoint, arrivalPoint);
       _directions.Add(trainDirection);
     }
 
@@ -86,15 +86,15 @@ namespace L6_7
 
   class TrainDirection
   {
-    private string _from;
-    private string _to;
+    private string _departurePoint;
+    private string _arrivalPoint;
     private Train _train;
     private int _tickets;
 
-    public TrainDirection(string From, string To)
+    public TrainDirection(string departurePoint, string arrivalPoint)
     {
-      _from = From;
-      _to = To;
+      _departurePoint = departurePoint;
+      _arrivalPoint = arrivalPoint;
       _tickets = SellTickets();
       _train = new Train(_tickets);
     }
@@ -111,7 +111,7 @@ namespace L6_7
 
     public override string ToString()
     {
-      return $"Направление {_from} - {_to}, поезд в составе из {_train.WagonCount} вагонов отправлен";
+      return $"Направление {_departurePoint} - {_arrivalPoint}, поезд в составе из {_train.WagonCount} вагонов отправлен";
     }
   }
 
@@ -129,9 +129,6 @@ namespace L6_7
 
     private void GenerateTrain(int tickets)
     {
-      const string CommandAddWagon = "add";
-      const string CommandSendTrain = "send";
-
       while (tickets > GetCapacity())
       {
         int leftTickets = tickets - GetCapacity();
@@ -173,31 +170,34 @@ namespace L6_7
       const string WagonTypePremium = "premium";
       const string WagonTypeEconom = "econom";
 
-      Console.WriteLine($"{WagonTypeVip} - добавить VIP вагон на 10 человек");
-      Console.WriteLine($"{WagonTypePremium} - добавить вагон премиум класса на 30 человек");
-      Console.WriteLine($"{WagonTypeEconom} - добавить вагон эконом класса на 60 человек (этот вагон будет добавлен по умолчанию)");
+      int vipCapacity = 10;
+      int premiumCapacity = 30;
+      int economCapacity = 60;
+      Console.WriteLine($"{WagonTypeVip} - добавить VIP вагон на {vipCapacity} человек");
+      Console.WriteLine($"{WagonTypePremium} - добавить вагон премиум класса на {premiumCapacity} человек");
+      Console.WriteLine($"{WagonTypeEconom} - добавить вагон эконом класса на {economCapacity} человек (этот вагон будет добавлен по умолчанию)");
       string userInput = Console.ReadLine();
 
       switch (userInput)
       {
         case WagonTypeVip:
           _type = WagonTypeVip;
-          _capacity = 10;
+          _capacity = vipCapacity;
           break;
 
         case WagonTypePremium:
           _type = WagonTypePremium;
-          _capacity = 30;
+          _capacity = premiumCapacity;
           break;
 
         case WagonTypeEconom:
           _type = WagonTypeEconom;
-          _capacity = 60;
+          _capacity = economCapacity;
           break;
 
         default:
           _type = WagonTypeEconom;
-          _capacity = 60;
+          _capacity = economCapacity;
           break;
       }
     }
