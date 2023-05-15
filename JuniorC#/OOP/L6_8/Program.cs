@@ -13,6 +13,7 @@ namespace L6_8
 
     abstract class Fighter
     {
+        protected bool IsFreezed;
         protected Random Accidental;
         protected Fighters FighterName;
         protected int HealthPoint;
@@ -33,7 +34,12 @@ namespace L6_8
 
         public Fighters Name => FighterName;
         public int Health => HealthPoint;
-        public bool IsFreezed { get; set; }
+        public bool FreezeStatus => IsFreezed;
+
+        public void ToFreeze(bool isFreeze)
+        {
+            IsFreezed = isFreeze;
+        }
 
         public virtual int TakeDamage(int damage)
         {
@@ -45,7 +51,6 @@ namespace L6_8
             }
 
             HealthPoint -= clearDamage;
-
             return clearDamage;
         }
 
@@ -240,8 +245,8 @@ namespace L6_8
         {
             if (!isFreezed && Accidental.Next(_maxChance) <= _freezeChance)
             {
+                Console.WriteLine("Заморожен");
                 return true;
-                Console.WriteLine("Противник заморожен");
             }
             else
             {
@@ -345,7 +350,7 @@ namespace L6_8
                     break;
 
                 case Fighters.Subzero:
-                    defender.IsFreezed = (attaker as Subzero).Freeze(defender.IsFreezed);
+                    defender.ToFreeze((attaker as Subzero).Freeze(defender.FreezeStatus));
                     break;
 
                 default:
