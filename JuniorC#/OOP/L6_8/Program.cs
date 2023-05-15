@@ -11,63 +11,40 @@ namespace L6_8
         }
     }
 
-    class Fighter
+    abstract class Fighter
     {
-        protected Random _random;
-        protected Fighters _name;
-        protected int _health;
-        protected int _minDamage;
-        protected int _maxDamage;
-        protected int _armor;
-        protected bool _isFreezed;
+        protected Random Accidental;
+        protected Fighters FighterName;
+        protected int HealthPoint;
+        protected int MinDamage;
+        protected int MaxDamage;
+        protected int Armor;
 
         public Fighter(Fighters name, int health, int armor, int minDamage, int maxDamage)
         {
-            _random = new Random();
-            _name = name;
-            _minDamage = minDamage;
-            _maxDamage = maxDamage;
-            _health = health;
-            _armor = armor;
-            _isFreezed = false;
+            Accidental = new Random();
+            FighterName = name;
+            MinDamage = minDamage;
+            MaxDamage = maxDamage;
+            HealthPoint = health;
+            Armor = armor;
+            IsFreezed = false;
         }
 
-        public Fighters Name => _name;
-        public int Health => _health;
+        public Fighters Name => FighterName;
+        public int Health => HealthPoint;
+        public bool IsFreezed { get; set; }
 
-        public virtual int TakeDamage(Fighter enemy)
+        public virtual int TakeDamage(int damage)
         {
             int clearDamage = 0;
 
-            if (enemy != null)
+            if (damage >= Armor)
             {
-                int damage = enemy.Hit();
-
-                if (damage >= _armor)
-                {
-                    clearDamage = damage - _armor;
-                }
-
-                _health -= clearDamage;
-
-                switch (enemy.Name)
-                {
-                    case Fighters.Baraka:
-                        (enemy as Baraka).Lifesteal(clearDamage);
-                        break;
-
-                    case Fighters.Jax:
-                        (enemy as Jax).IncreaseDoubleDamageChance(clearDamage);
-                        break;
-
-                    case Fighters.Subzero:
-                        (enemy as Subzero).Freeze(ref _isFreezed);
-                        break;
-
-                    default:
-                        break;
-                }
+                clearDamage = damage - Armor;
             }
+
+            HealthPoint -= clearDamage;
 
             return clearDamage;
         }
@@ -76,9 +53,9 @@ namespace L6_8
         {
             int damage = 0;
 
-            if (_isFreezed == false)
+            if (IsFreezed == false)
             {
-                damage = _random.Next(_minDamage, _maxDamage);
+                damage = Accidental.Next(MinDamage, MaxDamage);
             }
 
             return damage;
@@ -86,7 +63,7 @@ namespace L6_8
 
         public override string ToString()
         {
-            return $"{_name}. Урон: {_minDamage} - {_maxDamage}, Броня: {_armor}, Жизни: {_health}";
+            return $"{FighterName}. Урон: {MinDamage} - {MaxDamage}, Броня: {Armor}, Жизни: {HealthPoint}";
         }
     }
 
@@ -103,16 +80,17 @@ namespace L6_8
             _maxPercent = 100;
         }
 
-        public void Lifesteal(int clearDamage)
+        public string Lifesteal(int clearDamage)
         {
             int lifestealPoint = clearDamage * _lifesteal / _maxPercent;
-            _health += lifestealPoint;
-            Console.WriteLine($"{_name} отхилился на {lifestealPoint}");
+            HealthPoint += lifestealPoint;
 
-            if (_health > _maxHealth)
+            if (HealthPoint > _maxHealth)
             {
-                _health = _maxHealth;
+                HealthPoint = _maxHealth;
             }
+
+            return $"{FighterName} отхилился на {lifestealPoint}";
         }
 
         public override string ToString()
@@ -148,7 +126,7 @@ namespace L6_8
 
         public override int Hit()
         {
-            if (_random.Next(_maxDamageChance) <= _currentDoubleDamageChance)
+            if (Accidental.Next(_maxDamageChance) <= _currentDoubleDamageChance)
             {
                 _currentDoubleDamageChance = _baseDoubleDamageChance;
                 Console.WriteLine("Двойной урон");
@@ -183,14 +161,14 @@ namespace L6_8
             _maxPercent = 100;
         }
 
-        public override int TakeDamage(Fighter enemy)
+        public override int TakeDamage(int damage)
         {
             int clearDamage = 0;
 
-            if (_random.Next(_maxDodgeChance) > _currentDodgeChance || _isFreezed)
+            if (Accidental.Next(_maxDodgeChance) > _currentDodgeChance || IsFreezed)
             {
-                clearDamage = base.TakeDamage(enemy);
-                _currentDodgeChance += (_maxHealth - _health) * _dodgeScale / _maxPercent;
+                clearDamage = base.TakeDamage(damage);
+                _currentDodgeChance += (_maxHealth - HealthPoint) * _dodgeScale / _maxPercent;
             }
             else
             {
@@ -223,19 +201,19 @@ namespace L6_8
         {
             int damage = 0;
 
-            if (_isFireRage && _isFreezed != true)
+            if (_isFireRage && IsFreezed != true)
             {
-                damage = _maxDamage;
+                damage = MaxDamage;
             }
             else
             {
                 damage = base.Hit();
             }
 
-            if (_isFireRage == false && _random.Next(_maxChance) <= _fireRageChance)
+            if (_isFireRage == false && Accidental.Next(_maxChance) <= _fireRageChance)
             {
                 _isFireRage = true;
-                Console.WriteLine($"{_name} вошёл в ярость");
+                Console.WriteLine($"{FighterName} вошёл в ярость");
             }
 
             return damage;
@@ -258,16 +236,16 @@ namespace L6_8
             _maxChance = 100;
         }
 
-        public void Freeze(ref bool isFreezed)
+        public bool Freeze(bool isFreezed)
         {
-            if (isFreezed)
+            if (!isFreezed && Accidental.Next(_maxChance) <= _freezeChance)
             {
-                isFreezed = false;
-            }
-            else if (_random.Next(_maxChance) <= _freezeChance)
-            {
-                isFreezed = true;
+                return true;
                 Console.WriteLine("Противник заморожен");
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -281,11 +259,19 @@ namespace L6_8
     {
         private List<Fighter> _fighters;
         private int _playersCount;
+        private string _secondCorner;
+        private string _firstCorner;
+        private int _firstFighter;
+        private int _secondFighter;
 
         public Game()
         {
             _fighters = new List<Fighter>();
             _playersCount = 2;
+            _secondCorner = "Blue";
+            _firstCorner = "Red";
+            _firstFighter = 0;
+            _secondFighter = 1;
         }
 
         private bool ChoiceHero()
@@ -341,15 +327,34 @@ namespace L6_8
             }
         }
 
-        private bool CheckLoss(Fighter defender, Fighter attaker)
+        private bool CheckLoss(string defenderCorner, Fighter defender, string attakerCorner, Fighter attaker)
         {
-            int clearDamage = defender.TakeDamage(attaker);
-            Console.WriteLine($"{defender.Name} получил {clearDamage} урона. Осталось {defender.Health} жизней");
+            int damage = attaker.Hit();
+            int clearDamage = defender.TakeDamage(damage);
+            Console.WriteLine($"{defenderCorner} {defender.Name} получил {clearDamage} урона. Осталось {defender.Health} жизней");
             bool isLoss = defender.Health <= 0;
+
+            switch (attaker.Name)
+            {
+                case Fighters.Baraka:
+                    Console.WriteLine($"{attakerCorner} {(attaker as Baraka).Lifesteal(clearDamage)}");
+                    break;
+
+                case Fighters.Jax:
+                    (attaker as Jax).IncreaseDoubleDamageChance(clearDamage);
+                    break;
+
+                case Fighters.Subzero:
+                    defender.IsFreezed = (attaker as Subzero).Freeze(defender.IsFreezed);
+                    break;
+
+                default:
+                    break;
+            }
 
             if (isLoss)
             {
-                Console.WriteLine($"\n{attaker.Name} победил!");
+                Console.WriteLine($"\n{attakerCorner} {attaker.Name} победил!");
             }
 
             return isLoss;
@@ -358,8 +363,6 @@ namespace L6_8
         private void RoundFight()
         {
             bool isLoss = false;
-            int firstFighter = 0;
-            int secondFighter = 1;
 
             while (isLoss == false)
             {
@@ -367,13 +370,13 @@ namespace L6_8
 
                 for (int i = 0; i < _playersCount && isLoss == false; i++)
                 {
-                    if (i == firstFighter)
+                    if (i == _firstFighter)
                     {
-                        isLoss = CheckLoss(_fighters[secondFighter], _fighters[i]);
+                        isLoss = CheckLoss(_secondCorner, _fighters[_secondFighter], _firstCorner, _fighters[i]);
                     }
-                    else if (i == secondFighter)
+                    else if (i == _secondFighter)
                     {
-                        isLoss = CheckLoss(_fighters[firstFighter], _fighters[i]);
+                        isLoss = CheckLoss(_firstCorner, _fighters[_firstFighter], _secondCorner, _fighters[i]);
                     }
                 }
             }
@@ -382,10 +385,11 @@ namespace L6_8
         public void Start()
         {
             bool isDone = false;
+            int firstFighter = 0;
 
             for (int i = 0; i < _playersCount; i++)
             {
-                Console.WriteLine($"Выберите героя {i + 1}:");
+                Console.WriteLine($"Выберите героя {(i == _firstFighter ? _firstCorner : _secondCorner)}:");
 
                 while (isDone == false)
                 {
@@ -396,9 +400,9 @@ namespace L6_8
                 Console.WriteLine();
             }
 
-            foreach (Fighter fighter in _fighters)
+            for (int i = 0; i < _playersCount; i++)
             {
-                Console.WriteLine(fighter.ToString());
+                Console.WriteLine($"{(i == _firstFighter ? _firstCorner : _secondCorner)} {_fighters[i].ToString()}");
             }
 
             RoundFight();
