@@ -7,7 +7,7 @@ namespace L6_9
         static void Main(string[] args)
         {
             Shop shop = new Shop();
-            shop.Start();
+            shop.Begin();
         }
     }
 
@@ -37,19 +37,31 @@ namespace L6_9
             _wallet = money;
         }
 
-        public List<Product> FoodBasket => _products;
+        private int CalculateTotalCost()
+        {
+            int totalCost = 0;
+
+            foreach (Product item in _products)
+            {
+                totalCost += item.Price;
+            }
+
+            return totalCost;
+        }
 
         private Product? ThrowAwayRandomProduct()
         {
             Random random = new Random();
-            Product? product = _products[random.Next(_products.Count)];
-            return product;
+            Product? randomProduct = _products[random.Next(_products.Count)];
+            _products.Remove(randomProduct);
+            return randomProduct;
         }
 
-        public int Pay(int totalCost)
+        public int Pay()
         {
             int empty = 0;
             int cash = empty;
+            int totalCost = CalculateTotalCost();
 
             if (_wallet == empty)
             {
@@ -69,7 +81,7 @@ namespace L6_9
                 {
                     _products.Remove(product);
                     Console.WriteLine($"Клиент вытащил из корзины {product.Name}");
-                    cash = Pay(totalCost - product.Price);
+                    cash = Pay();
                 }
                 else
                 {
@@ -119,18 +131,6 @@ namespace L6_9
             }
         }
 
-        private int CalculateTotalCost(List<Product> products)
-        {
-            int totalCost = 0;
-
-            foreach (Product item in products)
-            {
-                totalCost += item.Price;
-            }
-
-            return totalCost;
-        }
-
         private void ToCash(int cash)
         {
             _cash += cash;
@@ -140,6 +140,7 @@ namespace L6_9
         private void SellProducts(Customer customer)
         {
             const string CommandPay = "pay";
+
             bool isChoice = true;
             Console.WriteLine("перечень продуктов:");
 
@@ -156,9 +157,9 @@ namespace L6_9
                 string inputCustomer = Console.ReadLine();
                 bool validCommand = int.TryParse(inputCustomer, out id);
 
-                if (validCommand && id < _groceries.Count)
+                if (validCommand && Math.Abs(id) < _groceries.Count)
                 {
-                    customer.PutProduct(_groceries[id]);
+                    customer.PutProduct(_groceries[Math.Abs(id)]);
                 }
                 else if (inputCustomer == CommandPay)
                 {
@@ -170,16 +171,16 @@ namespace L6_9
                 }
             }
 
-            int totalCost = CalculateTotalCost(customer.FoodBasket);
-            int cash = customer.Pay(totalCost);
+            int cash = customer.Pay();
             ToCash(cash);
         }
 
-        public void Start()
+        public void Begin()
         {
             for (int i = 0; i < _customers.Count; i++)
             {
-                Console.WriteLine($"Клиент - {i + 1}");
+                int clientNumber = i + 1;
+                Console.WriteLine($"Клиент - {clientNumber}");
                 SellProducts(_customers[i]);
             }
 
