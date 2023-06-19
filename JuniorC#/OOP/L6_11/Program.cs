@@ -64,11 +64,20 @@ namespace L6_11
 
         public Aquarium(int maxFishCount = 7, int minFishAge = 3, int maxFishAge = 10)
         {
-            _fishes = new List<Fish>();
+            if (Math.Abs(minFishAge) < Math.Abs(maxFishAge))
+            {
+                _minFishAge = Math.Abs(minFishAge);
+                _maxFishAge = Math.Abs(maxFishAge);
+            }
+            else
+            {
+                _minFishAge = Math.Abs(maxFishAge);
+                _maxFishAge = Math.Abs(minFishAge);
+            }
+
             _maxFishCount = Math.Abs(maxFishCount);
-            _minFishAge = Math.Abs(minFishAge);
-            _maxFishAge = Math.Abs(maxFishAge);
             _random = new Random();
+            _fishes = new List<Fish>();
             _colors = new ConsoleColor[] {
                 ConsoleColor.White,
                 ConsoleColor.Blue,
