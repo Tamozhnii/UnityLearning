@@ -64,18 +64,15 @@ namespace L6_11
 
         public Aquarium(int maxFishCount = 7, int minFishAge = 3, int maxFishAge = 10)
         {
-            if (Math.Abs(minFishAge) < Math.Abs(maxFishAge))
+            if (maxFishCount == 0)
             {
-                _minFishAge = Math.Abs(minFishAge);
-                _maxFishAge = Math.Abs(maxFishAge);
+                _maxFishCount = 7;
             }
             else
             {
-                _minFishAge = Math.Abs(maxFishAge);
-                _maxFishAge = Math.Abs(minFishAge);
+                _maxFishCount = Math.Abs(maxFishCount);
             }
 
-            _maxFishCount = Math.Abs(maxFishCount);
             _random = new Random();
             _fishes = new List<Fish>();
             _colors = new ConsoleColor[] {
@@ -87,6 +84,7 @@ namespace L6_11
                 ConsoleColor.Cyan,
                 ConsoleColor.Magenta
             };
+            ValidateMinMaxValues(minFishAge, maxFishAge);
         }
 
         public void Play()
@@ -195,6 +193,36 @@ namespace L6_11
         {
             int index = _random.Next(_colors.Length);
             return _colors[index];
+        }
+
+        private void ValidateMinMaxValues(int minValue, int maxValue)
+        {
+            if (minValue == 0)
+            {
+                _minFishAge = 1;
+            }
+
+            if (maxValue == 0)
+            {
+                _maxFishAge = 10;
+                return;
+            }
+
+            if (Math.Abs(minValue) < Math.Abs(maxValue))
+            {
+                _minFishAge = Math.Abs(minValue);
+                _maxFishAge = Math.Abs(maxValue);
+            }
+            else if (Math.Abs(minValue) == Math.Abs(maxValue))
+            {
+                _minFishAge = Math.Abs(minValue) - 1;
+                _maxFishAge = Math.Abs(maxValue);
+            }
+            else
+            {
+                _minFishAge = Math.Abs(maxValue);
+                _maxFishAge = Math.Abs(minValue);
+            }
         }
     }
 }
