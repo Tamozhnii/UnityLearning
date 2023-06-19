@@ -13,24 +13,22 @@ namespace L6_11
 
     class Fish
     {
+        public int RemainingAge { get; private set; }
         private string _name;
         private ConsoleColor _color;
-        private int _remainingAge;
         private int _maxAge;
 
         public Fish(string name, int age, ConsoleColor color)
         {
             _name = name;
             _color = color;
-            _remainingAge = age;
+            RemainingAge = age;
             _maxAge = age;
         }
 
-        public int RemainingAge => _remainingAge;
-
-        public void ToLive()
+        public void GrowUp()
         {
-            _remainingAge--;
+            RemainingAge--;
         }
 
         public void Show()
@@ -39,7 +37,7 @@ namespace L6_11
 
             for (int i = 0; i < _maxAge; i++)
             {
-                if (i < _remainingAge)
+                if (i < RemainingAge)
                 {
                     life += '#';
                 }
@@ -62,14 +60,24 @@ namespace L6_11
         private int _minFishAge;
         private int _maxFishAge;
         private Random _random;
+        private ConsoleColor[] _colors;
 
         public Aquarium(int maxFishCount = 7, int minFishAge = 3, int maxFishAge = 10)
         {
             _fishes = new List<Fish>();
-            _maxFishCount = ValidateValue(maxFishCount);
-            _minFishAge = ValidateValue(minFishAge);
-            _maxFishAge = ValidateValue(maxFishAge);
+            _maxFishCount = Math.Abs(maxFishCount);
+            _minFishAge = Math.Abs(minFishAge);
+            _maxFishAge = Math.Abs(maxFishAge);
             _random = new Random();
+            _colors = new ConsoleColor[] {
+                ConsoleColor.White,
+                ConsoleColor.Blue,
+                ConsoleColor.Green,
+                ConsoleColor.Red,
+                ConsoleColor.Yellow,
+                ConsoleColor.Cyan,
+                ConsoleColor.Magenta
+            };
         }
 
         public void Play()
@@ -96,7 +104,7 @@ namespace L6_11
                         break;
 
                     case PickUpCommand:
-                        PickUpFish();
+                        PickUpRandomFish();
                         break;
 
                     case ExitCommand:
@@ -104,31 +112,17 @@ namespace L6_11
                         break;
 
                     default:
-                        GetThrough();
+                        SkipTime();
                         break;
                 }
 
                 if (isUse)
                 {
+                    _fishes.RemoveAll(fish => fish.RemainingAge <= 0);
                     Console.ReadKey();
                     Console.Clear();
                     ShowFishes();
                 }
-            }
-        }
-
-        private int ValidateValue(int value)
-        {
-            int minValue = 1;
-            int maxValue = 10;
-
-            if ((value >= minValue) && (value <= maxValue))
-            {
-                return value;
-            }
-            else
-            {
-                return maxValue;
             }
         }
 
@@ -143,13 +137,13 @@ namespace L6_11
                 Console.Write("Введите имя/название рыбы: ");
                 string name = Console.ReadLine();
                 int age = _random.Next(_minFishAge, _maxFishAge);
-                ConsoleColor color = GetColor();
+                ConsoleColor color = GetFishColor();
                 _fishes.Add(new Fish(name, age, color));
                 Console.WriteLine("\nРыба добавлена");
             }
         }
 
-        private void PickUpFish()
+        private void PickUpRandomFish()
         {
             if (_fishes.Count > 0)
             {
@@ -180,38 +174,18 @@ namespace L6_11
             Console.WriteLine("\n");
         }
 
-        private void GetThrough()
+        private void SkipTime()
         {
             foreach (Fish fish in _fishes)
             {
-                fish.ToLive();
+                fish.GrowUp();
             }
-
-            _fishes.RemoveAll(fish => fish.RemainingAge <= 0);
         }
 
-        private ConsoleColor GetColor()
+        private ConsoleColor GetFishColor()
         {
-            int colorsCount = 7;
-            int num = _random.Next(colorsCount);
-
-            switch (num)
-            {
-                case 1:
-                    return ConsoleColor.Blue;
-                case 2:
-                    return ConsoleColor.Green;
-                case 3:
-                    return ConsoleColor.Red;
-                case 4:
-                    return ConsoleColor.Yellow;
-                case 5:
-                    return ConsoleColor.Cyan;
-                case 6:
-                    return ConsoleColor.Magenta;
-                default:
-                    return ConsoleColor.White;
-            }
+            int index = _random.Next(_colors.Length);
+            return _colors[index];
         }
     }
 }
