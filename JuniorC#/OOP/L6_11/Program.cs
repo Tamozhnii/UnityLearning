@@ -13,7 +13,6 @@ namespace L6_11
 
     class Fish
     {
-        public int RemainingAge { get; private set; }
         private string _name;
         private ConsoleColor _color;
         private int _maxAge;
@@ -25,6 +24,8 @@ namespace L6_11
             RemainingAge = age;
             _maxAge = age;
         }
+
+        public int RemainingAge { get; private set; }
 
         public void GrowUp()
         {
@@ -73,9 +74,11 @@ namespace L6_11
                 _maxFishCount = Math.Abs(maxFishCount);
             }
 
+            ValidateMinMaxValues(minFishAge, maxFishAge);
             _random = new Random();
             _fishes = new List<Fish>();
-            _colors = new ConsoleColor[] {
+            _colors = new ConsoleColor[]
+            {
                 ConsoleColor.White,
                 ConsoleColor.Blue,
                 ConsoleColor.Green,
@@ -84,7 +87,6 @@ namespace L6_11
                 ConsoleColor.Cyan,
                 ConsoleColor.Magenta
             };
-            ValidateMinMaxValues(minFishAge, maxFishAge);
         }
 
         public void Play()
@@ -125,12 +127,17 @@ namespace L6_11
 
                 if (isUse)
                 {
-                    _fishes.RemoveAll(fish => fish.RemainingAge <= 0);
+                    RemoveDeadFish();
                     Console.ReadKey();
                     Console.Clear();
                     ShowFishes();
                 }
             }
+        }
+
+        private void RemoveDeadFish()
+        {
+            _fishes.RemoveAll(fish => fish.RemainingAge <= 0);
         }
 
         private void AddFish()
@@ -197,17 +204,6 @@ namespace L6_11
 
         private void ValidateMinMaxValues(int minValue, int maxValue)
         {
-            if (minValue == 0)
-            {
-                _minFishAge = 1;
-            }
-
-            if (maxValue == 0)
-            {
-                _maxFishAge = 10;
-                return;
-            }
-
             if (Math.Abs(minValue) < Math.Abs(maxValue))
             {
                 _minFishAge = Math.Abs(minValue);
@@ -222,6 +218,16 @@ namespace L6_11
             {
                 _minFishAge = Math.Abs(maxValue);
                 _maxFishAge = Math.Abs(minValue);
+            }
+
+            if (_minFishAge == 0)
+            {
+                _minFishAge = 1;
+            }
+
+            if (_maxFishAge == 0)
+            {
+                _maxFishAge = 10;
             }
         }
     }
