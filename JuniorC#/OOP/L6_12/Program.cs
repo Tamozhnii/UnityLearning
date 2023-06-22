@@ -62,13 +62,12 @@ namespace L6_12
 
         private void ShowAviary(string command)
         {
-            int id;
-            bool isValidCommand = Int32.TryParse(command, out id);
+            bool isValidCommand = Int32.TryParse(command, out int id);
 
             if (isValidCommand && Math.Abs(id) < _aviaries.Count)
             {
                 Aviary aviary = _aviaries[id];
-                aviary.GetInfo();
+                aviary.ShowInfo();
             }
             else
             {
@@ -94,26 +93,19 @@ namespace L6_12
             }
         }
 
-        public void GetInfo()
+        public void ShowInfo()
         {
             Animal firstAnimal = _animals[0];
-            int countAimals = _animals.Count;
             int countMales = _animals.Count(animal => animal.Sex == Gender.Male);
-            int countFemales = countAimals - countMales;
-            string animalName = firstAnimal.Name;
-            string animalVoice = firstAnimal.Voice;
-            Console.WriteLine($"Вольер для животных. Название животного - {animalName}.");
-            Console.WriteLine($"Количество животных - {countAimals}, из них {countMales} самец(-ов) и {countFemales} самка(-ок).");
-            Console.WriteLine($"Животное издает звук - {animalVoice}.");
+            int countFemales = _animals.Count - countMales;
+            Console.WriteLine($"Вольер для животных. Название животного - {firstAnimal.Name}.");
+            Console.WriteLine($"Количество животных - {_animals.Count}, из них {countMales} самец(-ов) и {countFemales} самка(-ок).");
+            Console.WriteLine($"Животное издает звук - {firstAnimal.Voice}.");
         }
     }
 
     class Animal
     {
-        public string Name { get; private set; }
-        public Gender Sex { get; private set; }
-        public string Voice { get; private set; }
-
         public Animal(string name, string voice)
         {
             int maleChance = 49;
@@ -133,6 +125,10 @@ namespace L6_12
                 Sex = Gender.Female;
             }
         }
+
+        public string Name { get; private set; }
+        public Gender Sex { get; private set; }
+        public string Voice { get; private set; }
     }
 
     enum Gender
