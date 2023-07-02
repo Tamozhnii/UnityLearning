@@ -44,14 +44,14 @@ namespace L7_4
 
         public void ShowTopByLevel(int topCount)
         {
-            IEnumerable<Player> topPlayers = _players.OrderByDescending(p => p.Level).Take(topCount);
+            IEnumerable<Player> topPlayers = _players.OrderByDescending(player => player.Level).Take(topCount);
             Console.WriteLine($"\nТоп {topCount} по уровню:");
             ShowPlayers(topPlayers);
         }
 
         public void ShowTopByPower(int topCount)
         {
-            IEnumerable<Player> topPlayers = _players.OrderByDescending(p => p.Power).Take(topCount);
+            IEnumerable<Player> topPlayers = _players.OrderByDescending(player => player.Power).Take(topCount);
             Console.WriteLine($"\nТоп {topCount} по силе:");
             ShowPlayers(topPlayers);
         }
@@ -80,9 +80,9 @@ namespace L7_4
             Power = power;
         }
 
-        public string Name { get; set; }
-        public int Level { get; set; }
-        public int Power { get; set; }
+        public string Name { get; private set; }
+        public int Level { get; private set; }
+        public int Power { get; private set; }
 
         public override string ToString()
         {
