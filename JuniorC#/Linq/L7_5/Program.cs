@@ -32,9 +32,11 @@ namespace L7_5
 
         public void ShowExpiredProducts()
         {
-            int currentYear = Int32.Parse(DateTime.Now.ToString("yyyy"));
-            IEnumerable<StewedMeat> expiredProducts = _stewedMeats.FindAll(product => (currentYear - product.YearOfProduction) > product.ShelfLife);
             Console.WriteLine("\nСписок просроченной продукции:");
+            int currentYear = Int32.Parse(DateTime.Now.ToString("yyyy"));
+            IEnumerable<StewedMeat> expiredProducts = from product in _stewedMeats
+                                                      where (currentYear - product.YearOfProduction) > product.ShelfLife
+                                                      select product;
 
             foreach (StewedMeat product in expiredProducts)
             {
