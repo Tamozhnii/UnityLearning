@@ -23,7 +23,7 @@ namespace L7_6
 
         public void ShowData()
         {
-            IEnumerable<Person> solders = from solder in _solders select (new Person(solder.Name, solder.Rank));
+            var solders = from solder in _solders select (new { Name = solder.Name, Rank = solder.Rank });
 
             foreach (var solder in solders)
             {
@@ -40,18 +40,6 @@ namespace L7_6
             _solders.Add(new Solder("Shon", Weapons.Tank, Ranks.Colonel, 78));
             _solders.Add(new Solder("Mark", Weapons.Pistol, Ranks.Captain, 45));
         }
-    }
-
-    class Person
-    {
-        public Person(string name, Ranks rank)
-        {
-            Name = name;
-            Rank = rank;
-        }
-
-        public string Name { get; private set; }
-        public Ranks Rank { get; private set; }
     }
 
     class Solder
