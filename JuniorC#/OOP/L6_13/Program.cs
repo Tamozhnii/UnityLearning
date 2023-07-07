@@ -44,13 +44,13 @@ namespace L6_13
 
                 for (int i = 0; i < _serviceQuantityStandard; i++)
                 {
-                    Car client = new Car();
-                    WorkTypes diagnosis = Diagnostic(client.Breakdown);
-                    int serviceCost = DeterminingWorkCost(diagnosis);
-                    Console.WriteLine($"У машины следующая поломка - {client.Breakdown}, требуется - {diagnosis}, стоимость ремонта - {serviceCost}");
+                    Car car = new Car();
+                    WorkTypes workType = GetWorkTypeByProblem(car.Breakdown);
+                    int serviceCost = DetermineWorkCost(workType);
+                    Console.WriteLine($"У машины следующая поломка - {car.Breakdown}, требуется - {workType}, стоимость ремонта - {serviceCost}");
                     Console.WriteLine($"Починить машину ({DenyServiceCommand} если отказать):");
                     string userCommand = Console.ReadLine();
-                    Nomenclatures needsDetail = IdentifyDetail(diagnosis);
+                    Nomenclatures needsDetail = IdentifyDetail(workType);
 
                     switch (userCommand)
                     {
@@ -59,7 +59,7 @@ namespace L6_13
                             break;
 
                         default:
-                            MakeRepairs(needsDetail, serviceCost);
+                            ServiceCar(needsDetail, serviceCost);
                             break;
                     }
 
@@ -92,7 +92,17 @@ namespace L6_13
                 Console.WriteLine($"За отказ вы заплатили штраф клиенту в размере {_fine}, оставшийся баланс {_balance}");
             }
 
-            private void MakeRepairs(Nomenclatures needsDetail, int serviceCost)
+            private void ShowDetailList(Array details)
+            {
+                int offset = 1;
+
+                for (int i = 0; i < details.Length; i++)
+                {
+                    Console.WriteLine($"{i + offset} - {(Nomenclatures)details.GetValue(i)}");
+                }
+            }
+
+            private Detail SelectDetail()
             {
                 Console.WriteLine("Выберите деталь:");
                 Type type = typeof(Nomenclatures);
@@ -100,11 +110,7 @@ namespace L6_13
                 int offset = 1;
                 int detailIndex = 0;
                 bool isValidIndex = false;
-
-                for (int i = 0; i < details.Length; i++)
-                {
-                    Console.WriteLine($"{i + offset} - {(Nomenclatures)details.GetValue(i)}");
-                }
+                ShowDetailList(details);
 
                 while (isValidIndex == false)
                 {
@@ -118,7 +124,12 @@ namespace L6_13
                     }
                 }
 
-                Detail selectedDetail = _warehouse.GetDetail((Nomenclatures)details.GetValue(detailIndex - offset));
+                return _warehouse.GetDetail((Nomenclatures)details.GetValue(detailIndex - offset));
+            }
+
+            private void ServiceCar(Nomenclatures needsDetail, int serviceCost)
+            {
+                Detail selectedDetail = SelectDetail();
 
                 if (selectedDetail == null)
                 {
@@ -137,7 +148,7 @@ namespace L6_13
                 }
             }
 
-            private WorkTypes Diagnostic(PotentialProblems problem)
+            private WorkTypes GetWorkTypeByProblem(PotentialProblems problem)
             {
                 switch (problem)
                 {
@@ -164,7 +175,7 @@ namespace L6_13
                 }
             }
 
-            private int DeterminingWorkCost(WorkTypes work)
+            private int DetermineWorkCost(WorkTypes work)
             {
                 int detailCost = 0;
                 int workCost = _typesOfWork[work];
