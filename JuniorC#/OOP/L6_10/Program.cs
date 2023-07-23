@@ -1,5 +1,6 @@
 using System;
-using System.Threading.Tasks;
+using System.Threading;
+using System.Collections.Generic;
 
 namespace L6_10
 {
@@ -81,37 +82,52 @@ namespace L6_10
     {
         private int _width;
         private int _height;
-
+        private int _gameSpeed;
         private List<Warrior> _whiteArmy;
         private List<Warrior> _blackArmy;
         private List<Cell> _field;
 
         public War()
         {
-            _width = 6;
-            _height = 10;
+            _width = 5;
+            _height = 5;
+            _gameSpeed = 100;
             _whiteArmy = new List<Warrior>();
             _blackArmy = new List<Warrior>();
             _field = new List<Cell>();
             Initialize();
         }
 
-        public async void StartBattle()
+        public void StartBattle()
         {
             ShowBattle();
 
-            foreach (Warrior warrior in _whiteArmy)
+            while (_blackArmy.Count > 0 && _whiteArmy.Count > 0)
             {
-                MakeStep(warrior);
-                await Task.Delay(5);
-                ShowBattle();
+                foreach (Warrior warrior in _whiteArmy)
+                {
+                    MakeStep(warrior);
+                    Thread.Sleep(_gameSpeed);
+                    ShowBattle();
+                }
+
+                if (_blackArmy.Count == 0) break;
+
+                foreach (Warrior warrior in _blackArmy)
+                {
+                    MakeStep(warrior);
+                    Thread.Sleep(_gameSpeed);
+                    ShowBattle();
+                }
             }
 
-            foreach (Warrior warrior in _blackArmy)
+            if (_blackArmy.Count == 0)
             {
-                MakeStep(warrior);
-                await Task.Delay(5);
-                ShowBattle();
+                Console.WriteLine($"\n{Sides.Clubs} попедили");
+            }
+            else if (_whiteArmy.Count == 0)
+            {
+                Console.WriteLine($"\n{Sides.Hearts} попедили");
             }
         }
 
@@ -170,11 +186,11 @@ namespace L6_10
             {
                 enemy.Cell.Clear();
 
-                if (enemy.Side == Sides.Black)
+                if (enemy.Side == Sides.Hearts)
                 {
                     _blackArmy.Remove(enemy);
                 }
-                else if (enemy.Side == Sides.White)
+                else if (enemy.Side == Sides.Clubs)
                 {
                     _whiteArmy.Remove(enemy);
                 }
@@ -183,75 +199,125 @@ namespace L6_10
 
         private void MakeMove(Warrior warrior)
         {
-            List<Warrior> enemies = warrior.Side == Sides.Black ? _whiteArmy : _blackArmy;
+            List<Warrior> enemies = warrior.Side == Sides.Hearts ? _whiteArmy : _blackArmy;
             int[,] battlefield = DrawBattlefield(warrior);
-            WaveSpread(ref battlefield);
+            WaveSpread(battlefield);
             Warrior enemy = FindClosestEnemy(battlefield, enemies);
-            int[] nextStep = FindNextStep(battlefield, enemy);
+
+            if (enemy == null) return;
+
+            int[] nextStep = FindNextStep(battlefield, warrior, enemy);
             int x = nextStep[0];
             int y = nextStep[1];
             Cell cell = _field.Find(cell => cell.X == x && cell.Y == y);
 
-            if (cell != null)
+            if (cell != null && (warrior.Cell.X != cell.X || warrior.Cell.Y != cell.Y))
             {
                 warrior.SetCell(cell);
                 cell.SetWarrior(warrior);
             }
         }
 
-        private int[] FindNextStep(int[,] battlefield, Warrior targetEnemy)
+        private int[] FindNextStep(int[,] battlefield, Warrior warrior, Warrior targetEnemy)
         {
             int minLimit = 0;
-            int endRange = 0;
+            int endRange = 1;
             int offset = 1;
-            int[] currentPosition = { targetEnemy.Cell.X, targetEnemy.Cell.Y };
-            int rangePosition = battlefield[currentPosition[0], currentPosition[1]];
+            int[] currentPosition = { warrior.Cell.X, warrior.Cell.Y };
+            int rangePosition = battlefield[targetEnemy.Cell.X, targetEnemy.Cell.Y];
 
-            while (rangePosition != endRange)
+            if (rangePosition > endRange)
             {
-                if (currentPosition[0] + offset < _width && battlefield[currentPosition[0] + offset, currentPosition[1]] == rangePosition - offset)
+                currentPosition[0] = targetEnemy.Cell.X;
+                currentPosition[1] = targetEnemy.Cell.Y;
+
+                while (rangePosition != endRange)
+                {
+                    if (currentPosition[0] + offset < _width && battlefield[currentPosition[0] + offset, currentPosition[1]] == rangePosition - offset)
+                    {
+                        currentPosition[0] = currentPosition[0] + offset;
+                        rangePosition--;
+                    }
+                    else if (currentPosition[0] + offset < _width && currentPosition[1] + offset < _height && battlefield[currentPosition[0] + offset, currentPosition[1] + offset] == rangePosition - offset)
+                    {
+                        currentPosition[0] = currentPosition[0] + offset;
+                        currentPosition[1] = currentPosition[1] + offset;
+                        rangePosition--;
+                    }
+                    else if (currentPosition[1] + offset < _height && battlefield[currentPosition[0], currentPosition[1] + offset] == rangePosition - offset)
+                    {
+                        currentPosition[1] = currentPosition[1] + offset;
+                        rangePosition--;
+                    }
+                    else if (currentPosition[0] - offset >= minLimit && currentPosition[1] + offset < _height && battlefield[currentPosition[0] - offset, currentPosition[1] + offset] == rangePosition - offset)
+                    {
+                        currentPosition[0] = currentPosition[0] - offset;
+                        currentPosition[1] = currentPosition[1] + offset;
+                        rangePosition--;
+                    }
+                    else if (currentPosition[0] - offset >= minLimit && battlefield[currentPosition[0] - offset, currentPosition[1]] == rangePosition - offset)
+                    {
+                        currentPosition[0] = currentPosition[0] - offset;
+                        rangePosition--;
+                    }
+                    else if (currentPosition[0] - offset >= minLimit && currentPosition[1] - offset >= minLimit && battlefield[currentPosition[0] - offset, currentPosition[1] - offset] == rangePosition - offset)
+                    {
+                        currentPosition[0] = currentPosition[0] - offset;
+                        currentPosition[1] = currentPosition[1] - offset;
+                        rangePosition--;
+                    }
+                    else if (currentPosition[1] - offset >= minLimit && battlefield[currentPosition[0], currentPosition[1] - offset] == rangePosition - offset)
+                    {
+                        currentPosition[1] = currentPosition[1] - offset;
+                        rangePosition--;
+                    }
+                    else if (currentPosition[0] + offset < _width && currentPosition[1] - offset >= minLimit && battlefield[currentPosition[0] + offset, currentPosition[1] - offset] == rangePosition - offset)
+                    {
+                        currentPosition[0] = currentPosition[0] + offset;
+                        currentPosition[1] = currentPosition[1] - offset;
+                        rangePosition--;
+                    }
+                }
+            }
+            else
+            {
+                rangePosition = battlefield[warrior.Cell.X, warrior.Cell.Y];
+
+                if (currentPosition[0] + offset < _width && battlefield[currentPosition[0] + offset, currentPosition[1]] == rangePosition + offset)
                 {
                     currentPosition[0] = currentPosition[0] + offset;
-                    rangePosition--;
                 }
-                else if (currentPosition[0] + offset < _width && currentPosition[1] + offset < _height && battlefield[currentPosition[0] + offset, currentPosition[1] + offset] == rangePosition - offset)
+                else if (currentPosition[0] + offset < _width && currentPosition[1] + offset < _height && battlefield[currentPosition[0] + offset, currentPosition[1] + offset] == rangePosition + offset)
                 {
                     currentPosition[0] = currentPosition[0] + offset;
                     currentPosition[1] = currentPosition[1] + offset;
-                    rangePosition--;
                 }
-                else if (currentPosition[1] + offset < _height && battlefield[currentPosition[0], currentPosition[1] + offset] == rangePosition - offset)
+                else if (currentPosition[1] + offset < _height && battlefield[currentPosition[0], currentPosition[1] + offset] == rangePosition + offset)
                 {
                     currentPosition[1] = currentPosition[1] + offset;
-                    rangePosition--;
                 }
-                else if (currentPosition[0] - offset >= minLimit && currentPosition[1] + offset < _height && battlefield[currentPosition[0] - offset, currentPosition[1] + offset] == rangePosition - offset)
+                else if (currentPosition[0] - offset >= minLimit && currentPosition[1] + offset < _height && battlefield[currentPosition[0] - offset, currentPosition[1] + offset] == rangePosition + offset)
                 {
                     currentPosition[0] = currentPosition[0] - offset;
                     currentPosition[1] = currentPosition[1] + offset;
-                    rangePosition--;
                 }
-                else if (currentPosition[0] - offset >= minLimit && battlefield[currentPosition[0] - offset, currentPosition[1]] == rangePosition - offset)
+                else if (currentPosition[0] - offset >= minLimit && battlefield[currentPosition[0] - offset, currentPosition[1]] == rangePosition + offset)
                 {
                     currentPosition[0] = currentPosition[0] - offset;
-                    rangePosition--;
                 }
-                else if (currentPosition[0] - offset >= minLimit && currentPosition[1] - offset >= minLimit && battlefield[currentPosition[0] - offset, currentPosition[1] - offset] == rangePosition - offset)
+                else if (currentPosition[0] - offset >= minLimit && currentPosition[1] - offset >= minLimit && battlefield[currentPosition[0] - offset, currentPosition[1] - offset] == rangePosition + offset)
                 {
                     currentPosition[0] = currentPosition[0] - offset;
                     currentPosition[1] = currentPosition[1] - offset;
-                    rangePosition--;
                 }
-                else if (currentPosition[1] - offset >= minLimit && battlefield[currentPosition[0], currentPosition[1] - offset] == rangePosition - offset)
+                else if (currentPosition[1] - offset >= minLimit && battlefield[currentPosition[0], currentPosition[1] - offset] == rangePosition + offset)
                 {
                     currentPosition[1] = currentPosition[1] - offset;
-                    rangePosition--;
                 }
-                else if (currentPosition[0] + offset < _width && currentPosition[1] - offset >= minLimit && battlefield[currentPosition[0] + offset, currentPosition[1] - offset] == rangePosition - offset)
+                else if (currentPosition[0] + offset < _width && currentPosition[1] - offset >= minLimit && battlefield[currentPosition[0] + offset, currentPosition[1] - offset] == rangePosition + offset)
                 {
                     currentPosition[0] = currentPosition[0] + offset;
                     currentPosition[1] = currentPosition[1] - offset;
-                    rangePosition--;
                 }
             }
 
@@ -279,7 +345,7 @@ namespace L6_10
             return closestEnemy;
         }
 
-        private void WaveSpread(ref int[,] battlefield)
+        private void WaveSpread(int[,] battlefield)
         {
             bool isSearch = true;
             int empty = -1;
@@ -303,31 +369,31 @@ namespace L6_10
                             {
                                 battlefield[x + offset, y] = step + offset;
                             }
-                            else if (x + offset < _width && y + offset < _height && battlefield[x + offset, y + offset] == empty)
+                            if (x + offset < _width && y + offset < _height && battlefield[x + offset, y + offset] == empty)
                             {
                                 battlefield[x + offset, y + offset] = step + offset;
                             }
-                            else if (y + offset < _height && battlefield[x, y + offset] == empty)
+                            if (y + offset < _height && battlefield[x, y + offset] == empty)
                             {
                                 battlefield[x, y + offset] = step + offset;
                             }
-                            else if (x - offset >= minLimit && y + offset < _height && battlefield[x - offset, y + offset] == empty)
+                            if (x - offset >= minLimit && y + offset < _height && battlefield[x - offset, y + offset] == empty)
                             {
                                 battlefield[x - offset, y + offset] = step + offset;
                             }
-                            else if (x - offset >= minLimit && battlefield[x - offset, y] == empty)
+                            if (x - offset >= minLimit && battlefield[x - offset, y] == empty)
                             {
                                 battlefield[x - offset, y] = step + offset;
                             }
-                            else if (x - offset >= minLimit && y - offset >= minLimit && battlefield[x - offset, y - offset] == empty)
+                            if (x - offset >= minLimit && y - offset >= minLimit && battlefield[x - offset, y - offset] == empty)
                             {
                                 battlefield[x - offset, y - offset] = step + offset;
                             }
-                            else if (y - offset >= minLimit && battlefield[x, y - offset] == empty)
+                            if (y - offset >= minLimit && battlefield[x, y - offset] == empty)
                             {
                                 battlefield[x, y - offset] = step + offset;
                             }
-                            else if (x + offset < _width && y - offset >= minLimit && battlefield[x + offset, y - offset] == empty)
+                            if (x + offset < _width && y - offset >= minLimit && battlefield[x + offset, y - offset] == empty)
                             {
                                 battlefield[x + offset, y - offset] = step + offset;
                             }
@@ -382,8 +448,8 @@ namespace L6_10
 
             for (int i = 0; i < armyStrength; i++)
             {
-                _whiteArmy.Add(new Warrior(Sides.White));
-                _blackArmy.Add(new Warrior(Sides.Black));
+                _whiteArmy.Add(new Warrior(Sides.Clubs));
+                _blackArmy.Add(new Warrior(Sides.Hearts));
             }
 
             for (int x = 0; x < _width; x++)
@@ -413,7 +479,7 @@ namespace L6_10
 
     enum Sides
     {
-        White = '†',
-        Black = '$'
+        Clubs = '♣',
+        Hearts = '♥'
     }
 }
