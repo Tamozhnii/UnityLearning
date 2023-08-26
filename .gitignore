@@ -22,6 +22,7 @@ x64/
 !/[Ll]ibrary
 !*/[Ll]ibrary
 ![Ll]ibrary
+!JuniorUnity/L1/Library
 
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*
