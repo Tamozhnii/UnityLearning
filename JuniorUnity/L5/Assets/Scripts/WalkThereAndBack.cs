@@ -10,15 +10,15 @@ public class WalkThereAndBack : MonoBehaviour
 
     void Update()
     {
-        if(Math.Round(transform.position.y) != Math.Round(_target.position.y) && _isGoBack == false)
+        if (Math.Round(transform.position.y, 1) != Math.Round(_target.position.y, 1) && _isGoBack == false)
         {
             transform.position = Vector3.Lerp(transform.position, _target.position, _speed * Time.deltaTime);
         }
-        else if(Math.Round(transform.position.y) == Math.Round(_target.position.y) && _isGoBack == false)
+        else if (Math.Round(transform.position.y, 1) == Math.Round(_target.position.y, 1) && _isGoBack == false)
         {
             _isGoBack = true;
         }
-        else if(Math.Round(transform.position.y) != Math.Round(_startPosition.position.y) && _isGoBack)
+        else if (Math.Round(transform.position.y, 1) != Math.Round(_startPosition.position.y, 1) && _isGoBack)
         {
             transform.position = Vector3.Lerp(transform.position, _startPosition.position, _speed * Time.deltaTime);
         }
