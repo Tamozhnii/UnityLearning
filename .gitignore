@@ -16,14 +16,21 @@ x64/
 [Bb]in/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
-!/[Aa]ssets/**/*.meta
-!*/[Aa]ssets/**/*.meta
-!*/L*/[B-Z]*
-!/[Ll]ibrary
-!*/[Ll]ibrary
-![Ll]ibrary
-!JuniorUnity/L[1-99]/Library
-!JuniorUnity/*
+# !/[Aa]ssets/**/*.meta
+# !*/[Aa]ssets/**/*.meta
+# !*/L*/[B-Z]*
+# !/[Ll]ibrary
+# !*/[Ll]ibrary
+# ![Ll]ibrary
+JuniorUnity/L1
+JuniorUnity/L2
+JuniorUnity/L2_3
+JuniorUnity/L3
+JuniorUnity/L4
+JuniorUnity/L5/[B-Z]*
+JuniorUnity/L5/Library
+JuniorUnity/L5/Assets/[A-R]*
+JuniorUnity/L5/Assets/[T-Z]*
 
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*
